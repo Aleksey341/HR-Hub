@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HR Hub · канвас</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="site"><a class="brand" href="index.html">HR Hub</a><a href="index.html" class="on">Канвас</a><a href="bench.html">Бенч</a><a href="mvp.html">MVP</a></nav>
+<div class="wrap">
+<header>
+    <div class="tag">ЗАЯВКА · ФОРМАТ LEAN CANVAS</div>
+    <h1>RTK HR Agent Studio</h1>
+    <p class="sub">Один запрос сотрудника → разрешённая миссия → вызов уже стоящей HR-системы → один статус. Системы остаются мастер-системами. LLM в них напрямую не ходит.</p>
+  </header>
+
+  <div class="canvas">
+    <section class="cell problem">
+      <h2><span class="num">1</span> Проблема</h2>
+      <ul class="edit" contenteditable="true" data-k="problem">
+        <li>Сотрудник сам ищет, какой сервис отвечает за задачу: HelpMe, HR-сервисы, портал, Qlik, кадровая ИС.</li>
+        <li>Данные о нём уже есть, но формы просят ввести их снова.</li>
+        <li>Статус живёт в разных окнах и у разных владельцев. Сквозного номера нет.</li>
+        <li>Каждый новый сервис добавляет ещё один интерфейс и точечную интеграцию.</li>
+      </ul>
+      <div class="extra">
+        <b>Как закрывают сейчас</b>
+        <p class="edit" contenteditable="true" data-k="problem_extra">Каталог заявок, почта, локальные боты, Нейрошлюз как ответ без операции в системе, ручная маршрутизация владельцем услуги.</p>
+      </div>
+    </section>
+
+    <section class="cell solution">
+      <h2><span class="num">4</span> Решение</h2>
+      <ul class="edit" contenteditable="true" data-k="solution">
+        <li>AI HR Partner: намерение, диалог, контекст сотрудника, сбор недостающих параметров.</li>
+        <li>HR Orchestrator: каталог миссий, правила, права, состояние, подтверждение рискованного шага.</li>
+        <li>HR Hub: API и события к HelpMe, HR-сервисам, кадровой ИС, документам, BI. Учётные системы не заменяются.</li>
+      </ul>
+    </section>
+
+    <section class="cell uvp">
+      <h2><span class="num">3</span> Уникальное ценностное предложение</h2>
+      <div class="edit" contenteditable="true" data-k="uvp">
+        <p class="lead">Сотрудник пишет задачу обычным языком и получает результат в том же окне. Карту систем знать не нужно.</p>
+        <ul>
+          <li>Новая услуга подключается как миссия + workflow + API, а не как ещё один портал.</li>
+          <li>Критичное действие идёт через policy и подтверждение человека. Аудит есть у каждого шага.</li>
+          <li>Для внешнего рынка это слой поверх уже стоящего ландшафта, а не замена 1С и порталов.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cell advantage">
+      <h2><span class="num">9</span> Нечестное преимущество</h2>
+      <ul class="edit" contenteditable="true" data-k="advantage">
+        <li>Пилот на живом ландшафте Ростелекома: HelpMe, HR-сервисы, кадровая ИС, документы, Qlik.</li>
+        <li>Группа уже умеет ИИ, интеграции, контур ИБ и федеральный масштаб. Это не лабораторный чат.</li>
+        <li>Команда проходит путь от AS-IS до требований и прототипа. Снаружи тот же приём: не выкидывать учётные системы.</li>
+      </ul>
+    </section>
+
+    <section class="cell customers">
+      <h2><span class="num">2</span> Сегменты клиентов</h2>
+      <ul class="edit" contenteditable="true" data-k="customers">
+        <li>Пользователь: сотрудник. В пилоте — сотрудник Ростелекома. Руководитель — следующий контур, не первый.</li>
+        <li>Покупатель снаружи: HRD и CIO крупного распределённого работодателя, ОЦО, госорган или оператор с 1С и несколькими порталами.</li>
+        <li>Не наш первый клиент: компания, которой нужна одна коробочная HRM вместо всех систем сразу.</li>
+      </ul>
+    </section>
+
+    <section class="cell metrics">
+      <h2><span class="num">8</span> Ключевые метрики</h2>
+      <ul class="edit" contenteditable="true" data-k="metrics">
+        <li>Доля запросов, закрытых без оператора.</li>
+        <li>Медианное время до результата и число переходов между системами.</li>
+        <li>Доля полей, подставленных из контекста, а не введённых заново.</li>
+        <li>Время ручной обработки владельца услуги, CSAT и усилие сотрудника.</li>
+      </ul>
+    </section>
+
+    <section class="cell channels">
+      <h2><span class="num">5</span> Каналы</h2>
+      <ul class="edit" contenteditable="true" data-k="channels">
+        <li>Пилот внутри Ростелекома — доказательство, не модель выручки.</li>
+        <li>Прямые продажи HRD и CIO через контур ИТ / B2B.</li>
+        <li>Дальше: пакеты миссий и коннекторы к уже стоящим HR-системам заказчика.</li>
+      </ul>
+    </section>
+
+    <section class="cell cost">
+      <h2><span class="num">7</span> Структура затрат</h2>
+      <ul class="edit" contenteditable="true" data-k="cost">
+        <li>Прототип: SSO и контекст, каталог миссий, оркестратор, 2–3 коннектора, диалог, аудит.</li>
+        <li>Доступ владельцев HelpMe, HR-сервисов и кадровых документов. Без них прототип не живой.</li>
+        <li>ИБ и персональные данные, замер baseline до разработки, интервью с внешними покупателями.</li>
+      </ul>
+    </section>
+
+    <section class="cell revenue">
+      <h2><span class="num">6</span> Потоки выручки</h2>
+      <ul class="edit" contenteditable="true" data-k="revenue">
+        <li>Гипотеза, не прайс: лицензия платформы 5–12 млн ₽ в год плюс внедрение и коннекторы.</li>
+        <li>Порог хакатона 30 млн ₽ — это выручка продукта. Четыре–шесть таких контрактов дают порядок суммы. Воронки ещё нет.</li>
+        <li>Экономия часов внутри Ростелекома доказывает эффект пилота и не заменяет внешний контракт.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = "rtk_hr_agent_studio_lean_v1";
+  var S = {};
+  try { S = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { S = {}; }
+  document.querySelectorAll("[data-k]").forEach(function(el){
+    var k = el.getAttribute("data-k");
+    if (S[k]) el.innerHTML = S[k];
+    el.addEventListener("input", function(){
+      S[k] = el.innerHTML;
+      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+    });
+  });
+})();
+</script>
+</body>
+</html>
