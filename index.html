@@ -70,7 +70,7 @@
       <ul>
         <li>HR Agent Studio выступает источника консолидированных данных не заменяя существующие системы</li>
         <li>Лёгкое масштабирование: новые HR-сервисы и субагенты подключаются к единому контуру через HR Hub без перестройки всей системы и создания множества интеграций «каждый с каждым».</li>
-        <li><span class="by-2">Агент определяет запрос сотрудника и самостоятельно выбирает сервис/услугу и доводит действие до результата</span></li>
+        <li>Агент определяет запрос сотрудника и самостоятельно выбирает сервис/услугу и доводит действие до результата</li>
       </ul>
     </div>
   </section>
@@ -310,6 +310,27 @@
   }
 
   document.querySelectorAll("[data-k]").forEach(function(el){
+    el.addEventListener("paste", function(e){
+      e.preventDefault();
+      var text = (e.clipboardData && e.clipboardData.getData("text/plain")) || "";
+      if (!text) return;
+      var ok = false;
+      try { ok = document.execCommand("insertText", false, text); } catch (err) { ok = false; }
+      if (!ok) {
+        var sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        var range = sel.getRangeAt(0);
+        range.deleteContents();
+        var node = document.createTextNode(text);
+        range.insertNode(node);
+        range.setStartAfter(node);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        schedule();
+        armProof(el);
+      }
+    });
     el.addEventListener("input", function(){
       schedule();
       armProof(el);
