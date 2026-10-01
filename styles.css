@@ -107,6 +107,7 @@ body.sheet .site{background:#fff;margin:-12px -16px 12px}
 .who button{font:inherit;border:1px solid #595959;background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer}
 .who button.on{background:#111;color:#fff;border-color:#111}
 .who button.on-2{background:#C2410C;color:#fff;border-color:#C2410C}
+.proof{margin:4px 0 0;font-size:12px;color:#595959}
 .by-2{color:#C2410C}
 del.by-2{color:#C2410C;text-decoration:line-through}
 .hack h2{font-size:13px;font-weight:700;margin:0 0 8px;line-height:1.3}

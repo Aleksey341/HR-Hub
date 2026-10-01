@@ -20,6 +20,7 @@
         <button type="button" data-role="1">Первый</button>
         <button type="button" data-role="2">Второй</button>
       </div>
+      <p class="proof">Ошибки в словах, грамматике и синтаксисе правятся сами после короткой паузы.</p>
     </div>
     <img src="img/frii.png" alt="Центр корпоративных инноваций и продуктового развития, Акселератор ФРИИ">
   </header>
@@ -360,6 +361,153 @@
     }
     return null;
   }
+  var proofTimer = null;
+  var proofGen = 0;
+  var BLOCK = { P:1, DIV:1, LI:1, H1:1, H2:1, H3:1, TR:1, BR:1 };
+
+  function liveText(root){
+    var nodes = [];
+    var text = "";
+    function gap(){
+      if (text && !/\s$/.test(text)) text += "\n";
+    }
+    function walk(node, top){
+      if (node.nodeType === 3) {
+        nodes.push({ node: node, start: text.length });
+        text += node.nodeValue;
+        return;
+      }
+      if (node.nodeType !== 1 || node.tagName === "DEL") return;
+      var block = !top && (node.tagName === "BR" || BLOCK[node.tagName]);
+      if (block) gap();
+      for (var i = 0; i < node.childNodes.length; i++) walk(node.childNodes[i], false);
+      if (block && node.tagName !== "BR") gap();
+    }
+    walk(root, true);
+    return { text: text, nodes: nodes };
+  }
+  function selectionOffset(el, map){
+    var sel = window.getSelection();
+    if (!sel.rangeCount) return null;
+    var node = sel.anchorNode;
+    if (!node || node.nodeType !== 3 || !el.contains(node)) return null;
+    for (var i = 0; i < map.nodes.length; i++) {
+      if (map.nodes[i].node === node) return map.nodes[i].start + sel.anchorOffset;
+    }
+    return null;
+  }
+  function placeAt(el, offset){
+    var map = liveText(el);
+    var sel = window.getSelection();
+    var range = document.createRange();
+    var best = null;
+    for (var i = 0; i < map.nodes.length; i++) {
+      var item = map.nodes[i];
+      var len = item.node.nodeValue.length;
+      if (offset >= item.start && offset <= item.start + len) {
+        range.setStart(item.node, offset - item.start);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return;
+      }
+      if (item.start + len <= offset) best = item;
+    }
+    if (!best) return;
+    range.setStart(best.node, best.node.nodeValue.length);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  function applyFix(map, fix, asTrace){
+    var end = fix.offset + fix.length;
+    var startNode = null;
+    var endNode = null;
+    for (var i = 0; i < map.nodes.length; i++) {
+      var item = map.nodes[i];
+      var len = item.node.nodeValue.length;
+      var nodeEnd = item.start + len;
+      if (!startNode && fix.offset >= item.start && fix.offset < nodeEnd) {
+        startNode = { node: item.node, local: fix.offset - item.start, nodeEnd: nodeEnd };
+      }
+      if (end > item.start && end <= nodeEnd) {
+        endNode = { node: item.node, local: end - item.start };
+      }
+    }
+    if (!startNode || !endNode || startNode.node !== endNode.node) return false;
+    if (end > startNode.nodeEnd) return false;
+    var old = startNode.node.nodeValue.slice(startNode.local, endNode.local);
+    if (!old || old === fix.value) return false;
+    var range = document.createRange();
+    range.setStart(startNode.node, startNode.local);
+    range.setEnd(endNode.node, endNode.local);
+    var parent = startNode.node.parentElement;
+    var own = parent && parent.closest("span.by-2") && !parent.closest("del");
+    range.deleteContents();
+    if (asTrace && !own) {
+      var del = document.createElement("del");
+      del.className = "by-2";
+      del.textContent = old;
+      var span = document.createElement("span");
+      span.className = "by-2";
+      span.textContent = fix.value;
+      var holder = document.createDocumentFragment();
+      holder.appendChild(del);
+      holder.appendChild(span);
+      range.insertNode(holder);
+    } else {
+      range.insertNode(document.createTextNode(fix.value));
+    }
+    return true;
+  }
+  function armProof(el){
+    clearTimeout(proofTimer);
+    proofTimer = setTimeout(function(){ runProof(el); }, 1400);
+  }
+  function runProof(el){
+    if (!el || applying) return;
+    var map = liveText(el);
+    var text = map.text;
+    if (!/[А-Яа-яЁё]/.test(text)) return;
+    var token = ++proofGen;
+    var caret = document.activeElement === el ? selectionOffset(el, map) : null;
+    fetch("/api/proof", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text })
+    }).then(function(res){
+      if (!res.ok) throw new Error("proof");
+      return res.json();
+    }).then(function(json){
+      if (token !== proofGen || applying) return;
+      var fresh = liveText(el);
+      if (fresh.text !== text) return;
+      var fixes = (json && json.fixes) || [];
+      if (!fixes.length) return;
+      var nextCaret = caret;
+      var changed = 0;
+      applying = true;
+      try {
+        for (var i = fixes.length - 1; i >= 0; i--) {
+          var fix = fixes[i];
+          var current = liveText(el);
+          if (applyFix(current, fix, role() === "2")) {
+            changed++;
+            if (nextCaret !== null) {
+              if (nextCaret > fix.offset + fix.length) nextCaret += fix.value.length - fix.length;
+              else if (nextCaret >= fix.offset) nextCaret = fix.offset + fix.value.length;
+            }
+          }
+        }
+      } finally {
+        applying = false;
+      }
+      if (!changed) return;
+      if (nextCaret !== null && document.activeElement === el) placeAt(el, nextCaret);
+      schedule();
+    }).catch(function(){});
+  }
+
   function paintRole(){
     document.querySelectorAll("[data-role]").forEach(function(btn){
       var on = btn.getAttribute("data-role") === role();
@@ -384,6 +532,7 @@
         try { marked = insertMarked(e.data || ""); } catch (err) { marked = false; }
         if (marked) e.preventDefault();
         schedule();
+        armProof(el);
         return;
       }
       if (type === "deleteContentBackward" || type === "deleteContentForward" || type === "deleteByCut") {
@@ -394,6 +543,7 @@
         if (range.collapsed) range = rangeForDelete(type !== "deleteContentForward");
         if (range) traceDelete(range);
         schedule();
+        armProof(el);
       }
     });
     el.addEventListener("paste", function(e){
@@ -401,9 +551,17 @@
       e.preventDefault();
       insertMarked((e.clipboardData && e.clipboardData.getData("text/plain")) || "");
       schedule();
+      armProof(el);
     });
-    el.addEventListener("input", schedule);
-    el.addEventListener("blur", function(){ load(); });
+    el.addEventListener("input", function(){
+      schedule();
+      armProof(el);
+    });
+    el.addEventListener("blur", function(){
+      clearTimeout(proofTimer);
+      runProof(el);
+      load();
+    });
   });
   document.querySelectorAll("[data-c]").forEach(function(el){
     el.addEventListener("change", schedule);
