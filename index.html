@@ -15,6 +15,11 @@
     <div>
       <h1>Хакатон Canvas. Название проекта: HR Agent Studio</h1>
       <p class="save" id="save">Загрузка…</p>
+      <div class="who">
+        <span>Кто правит</span>
+        <button type="button" data-role="1">Первый</button>
+        <button type="button" data-role="2">Второй</button>
+      </div>
     </div>
     <img src="img/frii.png" alt="Центр корпоративных инноваций и продуктового развития, Акселератор ФРИИ">
   </header>
@@ -200,7 +205,140 @@
     });
   }
 
+  var ROLE = "hr_canvas_author";
+  function role(){
+    try { return localStorage.getItem(ROLE) === "2" ? "2" : "1"; } catch(e) { return "1"; }
+  }
+  function closestEl(node, sel){
+    var el = node && node.nodeType === 1 ? node : node && node.parentElement;
+    return el ? el.closest(sel) : null;
+  }
+  function placeCaret(node, after){
+    var sel = window.getSelection();
+    var r = document.createRange();
+    if (after) r.setStartAfter(node);
+    else r.setStartBefore(node);
+    r.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+  function ownInsert(range){
+    var span = closestEl(range.startContainer, "span.by-2");
+    return !!(span && !closestEl(range.startContainer, "del") && span.contains(range.endContainer));
+  }
+  function traceDelete(range){
+    if (range.collapsed || !range.toString()) return;
+    if (ownInsert(range)) {
+      range.deleteContents();
+      return;
+    }
+    var del = document.createElement("del");
+    del.className = "by-2";
+    del.textContent = range.toString();
+    range.deleteContents();
+    range.insertNode(del);
+    placeCaret(del, false);
+  }
+  function insertMarked(text){
+    if (!text) return;
+    var sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    var range = sel.getRangeAt(0);
+    if (!range.collapsed) traceDelete(range);
+    var live = window.getSelection();
+    range = live.rangeCount ? live.getRangeAt(0) : range;
+    var span = closestEl(range.startContainer, "span.by-2");
+    if (span && !closestEl(range.startContainer, "del")) {
+      var node = document.createTextNode(text);
+      range.insertNode(node);
+      placeCaret(node, true);
+      return;
+    }
+    var mark = document.createElement("span");
+    mark.className = "by-2";
+    mark.textContent = text;
+    range.insertNode(mark);
+    placeCaret(mark, true);
+  }
+  function rangeForDelete(backward){
+    var sel = window.getSelection();
+    if (!sel.rangeCount) return null;
+    var range = sel.getRangeAt(0);
+    if (!range.collapsed) return range;
+    var probe = range.cloneRange();
+    probe.collapse(true);
+    if (backward) {
+      if (probe.startOffset === 0 && probe.startContainer.nodeType === 3) {
+        var prev = probe.startContainer.previousSibling;
+        if (!prev) return null;
+        var next = document.createRange();
+        next.selectNodeContents(prev);
+        next.collapse(false);
+        return stepRange(next, true);
+      }
+    }
+    return stepRange(probe, backward);
+  }
+  function stepRange(range, backward){
+    var node = range.startContainer;
+    var offset = range.startOffset;
+    if (node.nodeType === 3) {
+      if (backward && offset > 0) {
+        var r = document.createRange();
+        r.setStart(node, offset - 1);
+        r.setEnd(node, offset);
+        return r;
+      }
+      if (!backward && offset < node.length) {
+        var f = document.createRange();
+        f.setStart(node, offset);
+        f.setEnd(node, offset + 1);
+        return f;
+      }
+    }
+    return null;
+  }
+  function paintRole(){
+    document.querySelectorAll("[data-role]").forEach(function(btn){
+      var on = btn.getAttribute("data-role") === role();
+      btn.classList.toggle("on", on && role() === "1");
+      btn.classList.toggle("on-2", on && role() === "2");
+    });
+  }
+  document.querySelectorAll("[data-role]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      try { localStorage.setItem(ROLE, btn.getAttribute("data-role")); } catch(e) {}
+      paintRole();
+    });
+  });
+  paintRole();
+
   document.querySelectorAll("[data-k]").forEach(function(el){
+    el.addEventListener("beforeinput", function(e){
+      if (role() !== "2" || applying) return;
+      var type = e.inputType || "";
+      if (type === "insertText") {
+        e.preventDefault();
+        insertMarked(e.data || "");
+        schedule();
+        return;
+      }
+      if (type === "deleteContentBackward" || type === "deleteContentForward" || type === "deleteByCut") {
+        e.preventDefault();
+        var sel = window.getSelection();
+        var range = sel.rangeCount ? sel.getRangeAt(0) : null;
+        if (!range) return;
+        if (range.collapsed) range = rangeForDelete(type !== "deleteContentForward");
+        if (range) traceDelete(range);
+        schedule();
+      }
+    });
+    el.addEventListener("paste", function(e){
+      if (role() !== "2" || applying) return;
+      e.preventDefault();
+      insertMarked((e.clipboardData && e.clipboardData.getData("text/plain")) || "");
+      schedule();
+    });
     el.addEventListener("input", schedule);
   });
   document.querySelectorAll("[data-c]").forEach(function(el){
