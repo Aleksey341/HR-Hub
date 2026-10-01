@@ -30,17 +30,18 @@
     <h2>1. Сегменты потребителей</h2>
     <h3>1.1 Конечные пользователи</h3>
     <div class="edit" contenteditable="true" data-k="users">
-      <p>Сотрудник крупной компании с несколькими HR-системами. В пилоте — сотрудник Ростелекома: ему нужно оформить отпуск, командировку или справку, и он не знает, в каком окне это делается. Руководитель — следующий контур, не первый.</p>
+      <p>Сотрудник компаний с несколькими HR-системами.</p>
+      <p>В пилоте - сотрудник Ростелекома</p>
     </div>
     <h3>1.2 К какому сегменту бизнеса внутри Ростелеком относится ваша идея:</h3>
     <ul class="segs">
       <li><label><input type="checkbox" data-c="it" checked> ИТ</label></li>
       <li><label><input type="checkbox" data-c="b2b" checked> B2B</label></li>
-      <li><label><input type="checkbox" data-c="wink"> B2C Wink</label></li>
-      <li><label><input type="checkbox" data-c="core"> B2C Core</label></li>
-      <li><label><input type="checkbox" data-c="b20"> B20</label></li>
-      <li><label><input type="checkbox" data-c="solar"> Солар</label></li>
-      <li><label><input type="checkbox" data-c="turbo"> Турбо</label></li>
+      <li><label><input type="checkbox" data-c="wink" checked> B2C Wink</label></li>
+      <li><label><input type="checkbox" data-c="core" checked> B2C Core</label></li>
+      <li><label><input type="checkbox" data-c="b20" checked> B20</label></li>
+      <li><label><input type="checkbox" data-c="solar" checked> Солар</label></li>
+      <li><label><input type="checkbox" data-c="turbo" checked> Турбо</label></li>
     </ul>
   </section>
 
@@ -48,9 +49,12 @@
     <h2>2. Проблема</h2>
     <p class="note">Проблема конечных пользователей, которую решает продукт.</p>
     <div class="edit" contenteditable="true" data-k="problem">
-      <p>Сотрудник испытывает проблему, когда кадровый вопрос разъехался по нескольким системам — HelpMe, HR-сервисы, портал, документы, — и чтобы решить её, сам ищет нужный сервис, заново вводит уже известные данные и следит за статусом в разных окнах. Одного номера заявки нет.</p>
-      <p>Сколько это стоит в рублях и сколько минут занимает, ещё не замерено. Замер «как сейчас» делаем до разработки.</p>
-      <p>Для команд, которые развивают услуги, каждая новая задача — ещё один интерфейс и ещё одна точечная связка. Разные команды конкурируют за одних и тех же разработчиков и за одни и те же системы.</p>
+      <p>- Сотрудник самостоятельно определяет нужный сервис для получения услуги: HelpMe, HR-сервисы, портал, Qlik</p>
+      <p>- Вынужденное переключение между несколькими интерфейсами</p>
+      <p>- Данные о сотруднике из корп. систем не переиспользуются при оформлении заявок</p>
+      <p>- Отсутствие единой логики работы с заявками: разные статусы, нейминг, системы</p>
+      <p>- Потребность в локальной автоматизации каждого сервиса/услуги</p>
+      <p>- Ландшафт интеграций усложняется с ростом систем/сервисов</p>
     </div>
   </section>
 
@@ -58,16 +62,18 @@
     <h2>3. Решение</h2>
     <h3>3.1 Краткое описание</h3>
     <div class="edit" contenteditable="true" data-k="solution">
-      <p>Сотрудник пишет задачу обычным языком в одно окно. HR Agent Studio — это окно. AI HR-партнёр ведёт запрос по карточке услуги из каталога: что можно сделать, какие данные нужны, кому можно и когда спросить человека. HR Hub берёт данные из систем, которые уже стоят. Модель в системы напрямую не ходит. Перед отпуском, командировкой и справкой человек подтверждает действие и получает один номер заявки.</p>
-      <p>Под Hub может встать ЦХД. С владельцами хранилища это ещё не решено. Если данные закроет хранилище, окно и партнёр всё равно нужны. Учётные системы не заменяются.</p>
+      <p>HR Agent Studio</p>
+      <p>Единое окно для получения HR-сервисов и услуг, которое объединяет пользовательский интерфейс, интеллектуальное сопровождение и интеграционный слой корпоративных систем.</p>
+      <p>AI HR-партнёр — выступает единым окном и управляет клиентским путём. Понимает задачу, сформулированную обычным языком, самостоятельно выбирает нужную услугу и сопровождает пользователя до результата. Определяет доступные операции, запрашивает недостающие сведения, соблюдает права и регламенты, а перед значимым действием получает подтверждение пользователя.</p>
+      <p>HR Hub — единый интеграционный модуль (ESB), через который HR-сервисы и информационные системы/AI агенты безопасно обмениваются данными. Он получает разрешённые сведения из действующих систем, обеспечивает предзаполнение заявок, передаёт команды на выполнение и возвращает единый статус результата.</p>
+      <p>Например, для оформления отпуска, командировки или справки сотрудник описывает задачу в одном окне, подтверждает подготовленное действие и получает единый номер заявки.</p>
     </div>
     <h3>3.2 Предполагаемые конкурентные преимущества</h3>
     <div class="edit" contenteditable="true" data-k="advantage">
       <ul>
-        <li>Слой поверх уже стоящих HR-систем, а не новая кадровая система и не ещё один портал.</li>
-        <li>Новая услуга подключается карточкой: сценарий и данные.</li>
-        <li>Пилот на живом ландшафте Ростелекома: HelpMe, HR-сервисы, документы.</li>
-        <li>Снаружи тот же приём: не выкидывать учётные системы заказчика.</li>
+        <li>HR Agent Studio выступает источника консолидированных данных не заменяя существующие системы</li>
+        <li>Лёгкое масштабирование: новые HR-сервисы и субагенты подключаются к единому контуру через HR Hub без перестройки всей системы и создания множества интеграций «каждый с каждым».</li>
+        <li><span class="by-2">Агент определяет запрос сотрудника и самостоятельно выбирает сервис/услугу и доводит действие до результата</span></li>
       </ul>
     </div>
   </section>
@@ -76,21 +82,21 @@
     <h2>5. Как продукт будет зарабатывать?</h2>
     <h3>5.1 Модель монетизации</h3>
     <div class="edit" contenteditable="true" data-k="money">
-      <p>Прямая продажа: лицензия платформы плюс внедрение и коннекторы к HR-системам заказчика. Пилот внутри Ростелекома доказывает схему. Экономия часов внутри не заменяет внешний контракт.</p>
+      <p>Прямая продажа: лицензия платформы плюс внедрение и коннекторы к HR-системам заказчика</p>
       <p>Покупатель снаружи — директор по персоналу и ИТ-директор крупного работодателя, у которого уже несколько HR-систем. Продажа идёт через контур ИТ и B2B.</p>
     </div>
     <h3>5.2 Средний чек</h3>
     <div class="edit" contenteditable="true" data-k="check">
-      <p>Публичного среднего чека у этого класса нет. Гипотеза, не прайс: 5–12 млн ₽ в год плюс внедрение. Порог хакатона 30 млн ₽ — это около четырёх–шести таких контрактов. Воронки ещё нет, цифру подтвердят 8–10 разговоров с покупателями.</p>
+      <p>Гипотеза 5–12 млн ₽ в год плюс внедрение. Необходимо 6–10 заключенных контрактов</p>
     </div>
   </section>
 
   <section class="hc market">
     <h2>4. Объем рынка</h2>
     <div class="edit" contenteditable="true" data-k="market">
-      <p><b>TAM.</b> Весь рынок кадровых систем и порталов. Публичную оценку всего HR Tech сюда не ставим: она считает другой класс продуктов, не слой, который доводит фразу сотрудника до заявки.</p>
-      <p><b>SAM.</b> Крупные работодатели, у которых уже несколько HR-систем и которым нужен этот слой. Число таких компаний не посчитано.</p>
-      <p><b>SOM.</b> Долю на три года не заявляем. Ориентир фильтра — 30 млн ₽ внешней выручки, это арифметика от гипотезы чека, не доля рынка.</p>
+      <p><b>TAM.</b> 45 млрд. ₽ - весь рынок РФ HR TECH решений</p>
+      <p><b>SAM.</b> 9 млрд. ₽ - крупные компании со сложной HR экосистемой</p>
+      <p><b>SOM.</b> 300 млн ₽ корпоративные клиенты на горизонте 4-х лет</p>
     </div>
   </section>
 
@@ -115,11 +121,7 @@
   var status = document.getElementById("save");
   var applying = false;
   var timer = null;
-  var saving = false;
   var dirty = false;
-  var serverRev = 0;
-  var lastSnap = "";
-  var loadGen = 0;
 
   function setStatus(text){ if (status) status.textContent = text; }
 
@@ -132,19 +134,6 @@
       data["c:" + el.getAttribute("data-c")] = el.checked ? "1" : "0";
     });
     return data;
-  }
-
-  function snapshot(data){
-    var copy = {};
-    Object.keys(data).forEach(function(key){
-      if (key !== "_rev") copy[key] = data[key];
-    });
-    return JSON.stringify(copy);
-  }
-
-  function fieldFocused(){
-    var el = document.activeElement;
-    return !!(el && el.hasAttribute && el.hasAttribute("data-k"));
   }
 
   function apply(data){
@@ -170,50 +159,11 @@
     try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e) { return null; }
   }
 
-  function saveNow(force){
-    if (applying || saving) return Promise.resolve();
-    if (!dirty && !force) return Promise.resolve();
-    var data = collect();
-    var postedSnap = snapshot(data);
-    if (!force && postedSnap === lastSnap) {
-      dirty = false;
-      setStatus("Сохранено. Откроется на любом компьютере.");
-      return Promise.resolve();
-    }
-    data._rev = serverRev;
-    remember(data);
+  function saveNow(){
+    if (applying) return;
+    remember(collect());
     dirty = false;
-    saving = true;
-    setStatus("Сохраняю…");
-    return fetch("/api/canvas", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      keepalive: true
-    }).then(function(res){
-      saving = false;
-      if (res.status === 409) {
-        dirty = true;
-        setStatus("Не сохранилось: на другом компьютере уже есть новая версия. Обновите страницу и внесите правку ещё раз.");
-        return { conflict: true };
-      }
-      if (!res.ok) throw new Error("save");
-      return res.json();
-    }).then(function(json){
-      if (!json || json.conflict) return;
-      if (Number.isInteger(json.rev)) serverRev = json.rev;
-      if (snapshot(collect()) !== postedSnap) {
-        dirty = true;
-        schedule();
-        return;
-      }
-      lastSnap = postedSnap;
-      setStatus("Сохранено. Откроется на любом компьютере.");
-    }).catch(function(){
-      saving = false;
-      dirty = true;
-      setStatus("Не удалось сохранить на сервер. Текст остался в этом браузере.");
-    });
+    setStatus("Сохранено в этом браузере.");
   }
 
   function schedule(){
@@ -224,48 +174,10 @@
     timer = setTimeout(saveNow, 600);
   }
 
-  function load(){
-    if (timer || saving || dirty) return;
-    var gen = ++loadGen;
-    fetch("/api/canvas", { cache: "no-store" }).then(function(res){
-      if (!res.ok) throw new Error("load");
-      return res.json();
-    }).then(function(json){
-      if (gen !== loadGen || dirty || saving) return;
-      if (json && json.data) {
-        var snap = snapshot(json.data);
-        var rev = Number.isInteger(json.data._rev) ? json.data._rev : 0;
-        if (snap === lastSnap) {
-          serverRev = rev;
-          setStatus("Сохранено. Откроется на любом компьютере.");
-          return;
-        }
-        if (fieldFocused()) return;
-        serverRev = rev;
-        lastSnap = snap;
-        apply(json.data);
-        remember(json.data);
-        setStatus("Сохранено. Откроется на любом компьютере.");
-        return;
-      }
-      var local = localCopy();
-      if (local && Object.keys(local).length && !lastSnap) {
-        apply(local);
-        serverRev = 0;
-        dirty = true;
-        saveNow(true);
-        return;
-      }
-      setStatus("Сохранено. Откроется на любом компьютере.");
-    }).catch(function(){
-      var local = localCopy();
-      if (local && !lastSnap) {
-        apply(local);
-        lastSnap = snapshot(local);
-        if (Number.isInteger(local._rev)) serverRev = local._rev;
-      }
-      setStatus("Сервер недоступен. Показан текст этого браузера.");
-    });
+  function loadLocal(){
+    var local = localCopy();
+    if (local) apply(local);
+    setStatus("Сохранено в этом браузере.");
   }
 
   var ROLE = "hr_canvas_author";
@@ -561,20 +473,16 @@
     el.addEventListener("blur", function(){
       clearTimeout(proofTimer);
       runProof(el);
-      load();
     });
   });
   document.querySelectorAll("[data-c]").forEach(function(el){
     el.addEventListener("change", schedule);
   });
   document.addEventListener("visibilitychange", function(){
-    if (document.visibilityState === "hidden") {
-      clearTimeout(timer);
-      timer = null;
-      if (dirty) saveNow();
-    } else {
-      load();
-    }
+    if (document.visibilityState !== "hidden") return;
+    clearTimeout(timer);
+    timer = null;
+    if (dirty) saveNow();
   });
   var pptxBtn = document.getElementById("pptx");
   if (pptxBtn) pptxBtn.addEventListener("click", function(){
@@ -603,8 +511,7 @@
       pptxBtn.disabled = false;
     });
   });
-  setInterval(load, 4000);
-  load();
+  loadLocal();
 })();
 </script>
 </body>
