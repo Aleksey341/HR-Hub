@@ -16,9 +16,6 @@
       <h1>Хакатон Canvas. Название проекта: HR Agent Studio</h1>
       <p class="save" id="save">Загрузка…</p>
       <div class="who">
-        <span>Кто правит</span>
-        <button type="button" data-role="1">Первый</button>
-        <button type="button" data-role="2">Второй</button>
         <button type="button" id="pptx">Скачать PPTX</button>
       </div>
       <p class="proof">Ошибки в словах, грамматике и синтаксисе правятся сами после короткой паузы.</p>
@@ -180,100 +177,6 @@
     setStatus("Сохранено в этом браузере.");
   }
 
-  var ROLE = "hr_canvas_author";
-  function role(){
-    try { return localStorage.getItem(ROLE) === "2" ? "2" : "1"; } catch(e) { return "1"; }
-  }
-  function closestEl(node, sel){
-    var el = node && node.nodeType === 1 ? node : node && node.parentElement;
-    return el ? el.closest(sel) : null;
-  }
-  function placeCaret(node, after){
-    var sel = window.getSelection();
-    var r = document.createRange();
-    if (after) r.setStartAfter(node);
-    else r.setStartBefore(node);
-    r.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(r);
-  }
-  function ownInsert(range){
-    var span = closestEl(range.startContainer, "span.by-2");
-    return !!(span && !closestEl(range.startContainer, "del") && span.contains(range.endContainer));
-  }
-  function traceDelete(range){
-    if (range.collapsed || !range.toString()) return;
-    if (ownInsert(range)) {
-      range.deleteContents();
-      return;
-    }
-    var del = document.createElement("del");
-    del.className = "by-2";
-    del.textContent = range.toString();
-    range.deleteContents();
-    range.insertNode(del);
-    placeCaret(del, false);
-  }
-  function insertMarked(text){
-    if (!text) return false;
-    var sel = window.getSelection();
-    if (!sel.rangeCount) return false;
-    var range = sel.getRangeAt(0);
-    if (!range.collapsed) traceDelete(range);
-    var live = window.getSelection();
-    range = live.rangeCount ? live.getRangeAt(0) : range;
-    var span = closestEl(range.startContainer, "span.by-2");
-    if (span && !closestEl(range.startContainer, "del")) {
-      var node = document.createTextNode(text);
-      range.insertNode(node);
-      placeCaret(node, true);
-      return true;
-    }
-    var mark = document.createElement("span");
-    mark.className = "by-2";
-    mark.textContent = text;
-    range.insertNode(mark);
-    placeCaret(mark, true);
-    return true;
-  }
-  function rangeForDelete(backward){
-    var sel = window.getSelection();
-    if (!sel.rangeCount) return null;
-    var range = sel.getRangeAt(0);
-    if (!range.collapsed) return range;
-    var probe = range.cloneRange();
-    probe.collapse(true);
-    if (backward) {
-      if (probe.startOffset === 0 && probe.startContainer.nodeType === 3) {
-        var prev = probe.startContainer.previousSibling;
-        if (!prev) return null;
-        var next = document.createRange();
-        next.selectNodeContents(prev);
-        next.collapse(false);
-        return stepRange(next, true);
-      }
-    }
-    return stepRange(probe, backward);
-  }
-  function stepRange(range, backward){
-    var node = range.startContainer;
-    var offset = range.startOffset;
-    if (node.nodeType === 3) {
-      if (backward && offset > 0) {
-        var r = document.createRange();
-        r.setStart(node, offset - 1);
-        r.setEnd(node, offset);
-        return r;
-      }
-      if (!backward && offset < node.length) {
-        var f = document.createRange();
-        f.setStart(node, offset);
-        f.setEnd(node, offset + 1);
-        return f;
-      }
-    }
-    return null;
-  }
   var proofTimer = null;
   var proofGen = 0;
   var BLOCK = { P:1, DIV:1, LI:1, H1:1, H2:1, H3:1, TR:1, BR:1 };
@@ -332,7 +235,7 @@
     sel.removeAllRanges();
     sel.addRange(range);
   }
-  function applyFix(map, fix, asTrace){
+  function applyFix(map, fix){
     var end = fix.offset + fix.length;
     var startNode = null;
     var endNode = null;
@@ -354,23 +257,8 @@
     var range = document.createRange();
     range.setStart(startNode.node, startNode.local);
     range.setEnd(endNode.node, endNode.local);
-    var parent = startNode.node.parentElement;
-    var own = parent && parent.closest("span.by-2") && !parent.closest("del");
     range.deleteContents();
-    if (asTrace && !own) {
-      var del = document.createElement("del");
-      del.className = "by-2";
-      del.textContent = old;
-      var span = document.createElement("span");
-      span.className = "by-2";
-      span.textContent = fix.value;
-      var holder = document.createDocumentFragment();
-      holder.appendChild(del);
-      holder.appendChild(span);
-      range.insertNode(holder);
-    } else {
-      range.insertNode(document.createTextNode(fix.value));
-    }
+    range.insertNode(document.createTextNode(fix.value));
     return true;
   }
   function armProof(el){
@@ -404,7 +292,7 @@
         for (var i = fixes.length - 1; i >= 0; i--) {
           var fix = fixes[i];
           var current = liveText(el);
-          if (applyFix(current, fix, role() === "2")) {
+          if (applyFix(current, fix)) {
             changed++;
             if (nextCaret !== null) {
               if (nextCaret > fix.offset + fix.length) nextCaret += fix.value.length - fix.length;
@@ -421,51 +309,7 @@
     }).catch(function(){});
   }
 
-  function paintRole(){
-    document.querySelectorAll("[data-role]").forEach(function(btn){
-      var on = btn.getAttribute("data-role") === role();
-      btn.classList.toggle("on", on && role() === "1");
-      btn.classList.toggle("on-2", on && role() === "2");
-    });
-  }
-  document.querySelectorAll("[data-role]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      try { localStorage.setItem(ROLE, btn.getAttribute("data-role")); } catch(e) {}
-      paintRole();
-    });
-  });
-  paintRole();
-
   document.querySelectorAll("[data-k]").forEach(function(el){
-    el.addEventListener("beforeinput", function(e){
-      if (role() !== "2" || applying) return;
-      var type = e.inputType || "";
-      if (type === "insertText") {
-        var marked = false;
-        try { marked = insertMarked(e.data || ""); } catch (err) { marked = false; }
-        if (marked) e.preventDefault();
-        schedule();
-        armProof(el);
-        return;
-      }
-      if (type === "deleteContentBackward" || type === "deleteContentForward" || type === "deleteByCut") {
-        e.preventDefault();
-        var sel = window.getSelection();
-        var range = sel.rangeCount ? sel.getRangeAt(0) : null;
-        if (!range) return;
-        if (range.collapsed) range = rangeForDelete(type !== "deleteContentForward");
-        if (range) traceDelete(range);
-        schedule();
-        armProof(el);
-      }
-    });
-    el.addEventListener("paste", function(e){
-      if (role() !== "2" || applying) return;
-      e.preventDefault();
-      insertMarked((e.clipboardData && e.clipboardData.getData("text/plain")) || "");
-      schedule();
-      armProof(el);
-    });
     el.addEventListener("input", function(){
       schedule();
       armProof(el);
