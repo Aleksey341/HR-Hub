@@ -100,13 +100,13 @@
   <section class="hc team">
     <div class="grow">
       <h2>6. Команда. Кто сейчас есть в команде?</h2>
-      <p class="note">ФИО, роль, корпоративная почта и место работы вписывает команда. В материалах заявки состав ещё не зафиксирован, поэтому строки пустые.</p>
+      <p class="note">Корпоративная почта пока не указана.</p>
       <table>
         <tr><th>ФИО</th><th>Роль</th><th>Корп. почта</th><th>Место работы</th></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t1n"></td><td class="edit" contenteditable="true" data-k="t1r"></td><td class="edit" contenteditable="true" data-k="t1e"></td><td class="edit" contenteditable="true" data-k="t1w"></td></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t2n"></td><td class="edit" contenteditable="true" data-k="t2r"></td><td class="edit" contenteditable="true" data-k="t2e"></td><td class="edit" contenteditable="true" data-k="t2w"></td></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t3n"></td><td class="edit" contenteditable="true" data-k="t3r"></td><td class="edit" contenteditable="true" data-k="t3e"></td><td class="edit" contenteditable="true" data-k="t3w"></td></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t4n"></td><td class="edit" contenteditable="true" data-k="t4r"></td><td class="edit" contenteditable="true" data-k="t4e"></td><td class="edit" contenteditable="true" data-k="t4w"></td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t1n">Солодовников Игорь Васильевич</td><td class="edit" contenteditable="true" data-k="t1r">Тим лидер</td><td class="edit" contenteditable="true" data-k="t1e"></td><td class="edit" contenteditable="true" data-k="t1w">Ростелеком</td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t2n">Бурнаев Дмитрий Александрович</td><td class="edit" contenteditable="true" data-k="t2r">Руководитель проектов</td><td class="edit" contenteditable="true" data-k="t2e"></td><td class="edit" contenteditable="true" data-k="t2w">Ростелеком</td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t3n">Капитонова Екатерина Олеговна</td><td class="edit" contenteditable="true" data-k="t3r">Руководитель проектов</td><td class="edit" contenteditable="true" data-k="t3e"></td><td class="edit" contenteditable="true" data-k="t3w">Ростелеком</td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t4n">Денисов Алексей Витальевич</td><td class="edit" contenteditable="true" data-k="t4r">Руководитель проектов</td><td class="edit" contenteditable="true" data-k="t4e"></td><td class="edit" contenteditable="true" data-k="t4w">Ростелеком</td></tr>
       </table>
     </div>
     <img src="img/rostelecom.png" alt="Ростелеком. Технологии возможностей">
@@ -178,6 +178,13 @@
       var solution = document.querySelector("[data-k=solution]");
       if (problem) local.problem = problem.innerHTML;
       if (solution) local.solution = solution.innerHTML;
+      remember(local);
+    }
+    if (local && !(local.t1n && String(local.t1n).replace(/<[^>]+>/g, "").trim())) {
+      ["t1n", "t1r", "t1w", "t2n", "t2r", "t2w", "t3n", "t3r", "t3w", "t4n", "t4r", "t4w"].forEach(function(key) {
+        var cell = document.querySelector("[data-k=" + key + "]");
+        if (cell) local[key] = cell.innerHTML;
+      });
       remember(local);
     }
     if (local) apply(local);
