@@ -5,113 +5,103 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HR Hub · канвас</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="sheet">
 <nav class="site"><a class="brand" href="index.html">HR Hub</a><a href="index.html" class="on">Канвас</a><a href="bench.html">Бенч</a><a href="mvp.html">MVP</a></nav>
-<div class="wrap">
-<header>
-    <div class="tag">ЗАЯВКА · ФОРМАТ LEAN CANVAS</div>
-    <h1>HR Agent Studio</h1>
-    <p class="sub">Сотрудник обращается в одно окно. Studio принимает запрос, AI HR-партнёр ведёт его по карточке услуги, HR Hub берёт данные из уже стоящих систем. Модель в системы напрямую не ходит.</p>
+<div class="hack">
+  <header class="title">
+    <h1>Хакатон Canvas. Название проекта: HR Agent Studio</h1>
+    <img src="img/frii.png" alt="Центр корпоративных инноваций и продуктового развития, Акселератор ФРИИ">
   </header>
 
-  <div class="canvas">
-    <section class="cell problem">
-      <h2><span class="num">1</span> Проблема</h2>
-      <ul class="edit" contenteditable="true" data-k="problem">
-        <li>Сотрудник сам ищет, какой сервис отвечает за задачу: HelpMe, HR-сервисы, портал, Qlik, кадровая ИС.</li>
-        <li>Данные о нём уже есть, но формы просят ввести их снова.</li>
-        <li>Статус живёт в разных окнах и у разных владельцев. Сквозного номера нет.</li>
-        <li>Каждый новый сервис добавляет ещё один интерфейс и точечную интеграцию.</li>
-        <li>Команды разных услуг конкурируют за одних и тех же разработчиков и за одни и те же системы.</li>
-      </ul>
-      <div class="extra">
-        <b>Как закрывают сейчас</b>
-        <p class="edit" contenteditable="true" data-k="problem_extra">Каталог заявок, почта, локальные боты, Нейрошлюз как ответ без операции в системе, ручная маршрутизация владельцем услуги.</p>
-      </div>
-    </section>
+  <section class="hc seg">
+    <h2>1. Сегменты потребителей</h2>
+    <h3>1.1 Конечные пользователи</h3>
+    <div class="edit" contenteditable="true" data-k="users">
+      <p>Сотрудник крупной компании с несколькими HR-системами. В пилоте — сотрудник Ростелекома: ему нужно оформить отпуск, командировку или справку, и он не знает, в каком окне это делается. Руководитель — следующий контур, не первый.</p>
+    </div>
+    <h3>1.2 К какому сегменту бизнеса внутри Ростелеком относится ваша идея:</h3>
+    <ul class="segs">
+      <li><label><input type="checkbox" data-c="it" checked> ИТ</label></li>
+      <li><label><input type="checkbox" data-c="b2b" checked> B2B</label></li>
+      <li><label><input type="checkbox" data-c="wink"> B2C Wink</label></li>
+      <li><label><input type="checkbox" data-c="core"> B2C Core</label></li>
+      <li><label><input type="checkbox" data-c="b20"> B20</label></li>
+      <li><label><input type="checkbox" data-c="solar"> Солар</label></li>
+      <li><label><input type="checkbox" data-c="turbo"> Турбо</label></li>
+    </ul>
+  </section>
 
-    <section class="cell solution">
-      <h2><span class="num">4</span> Решение</h2>
-      <ul class="edit" contenteditable="true" data-k="solution">
-        <li>HR Agent Studio: окно сотрудника. Сюда пишут задачу обычным языком и не ищут, какой сервис открыть.</li>
-        <li>AI HR-партнёр: агенты по услугам. Здесь их настраивают под процесс и клиентский путь. Карточка из каталога задаёт границу услуги. Субагент может только собрать данные внутри шага. В систему карточка идёт после подтверждения человека.</li>
-        <li>HR Hub: данные из систем, которые уже стоят в HR-контуре. Учётные системы не заменяются. Под Hub может встать ЦХД — с владельцами хранилища это ещё не решено. Если данные закроет хранилище, окно и партнёр всё равно нужны.</li>
-      </ul>
-    </section>
+  <section class="hc problem">
+    <h2>2. Проблема</h2>
+    <p class="note">Проблема конечных пользователей, которую решает продукт.</p>
+    <div class="edit" contenteditable="true" data-k="problem">
+      <p>Сотрудник испытывает проблему, когда кадровый вопрос разъехался по нескольким системам — HelpMe, HR-сервисы, портал, документы, — и чтобы решить её, сам ищет нужный сервис, заново вводит уже известные данные и следит за статусом в разных окнах. Одного номера заявки нет.</p>
+      <p>Сколько это стоит в рублях и сколько минут занимает, ещё не замерено. Замер «как сейчас» делаем до разработки.</p>
+      <p>Для команд, которые развивают услуги, каждая новая задача — ещё один интерфейс и ещё одна точечная связка. Разные команды конкурируют за одних и тех же разработчиков и за одни и те же системы.</p>
+    </div>
+  </section>
 
-    <section class="cell uvp">
-      <h2><span class="num">3</span> Уникальное ценностное предложение</h2>
-      <div class="edit" contenteditable="true" data-k="uvp">
-        <p class="lead">Сотрудник пишет задачу обычным языком и получает результат в том же окне. Карту систем знать не нужно.</p>
-        <ul>
-          <li>Новая услуга подключается настройкой агента в партнёре: сценарий и данные, а не ещё один портал.</li>
-          <li>Критичное действие идёт через policy и подтверждение человека. Аудит есть у каждого шага.</li>
-          <li>Для внешнего рынка это слой поверх уже стоящего ландшафта, а не замена действующих HR-систем и порталов.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="cell advantage">
-      <h2><span class="num">9</span> Нечестное преимущество</h2>
-      <ul class="edit" contenteditable="true" data-k="advantage">
-        <li>Пилот на живом ландшафте Ростелекома: HelpMe, HR-сервисы, кадровая ИС, документы. Это не новый учёт.</li>
-        <li>Группа уже умеет ИИ, интеграции, контур ИБ и федеральный масштаб. Это не лабораторный чат.</li>
-        <li>Команда проходит путь от AS-IS до требований и прототипа. Снаружи тот же приём: не выкидывать учётные системы.</li>
+  <section class="hc solution">
+    <h2>3. Решение</h2>
+    <h3>3.1 Краткое описание</h3>
+    <div class="edit" contenteditable="true" data-k="solution">
+      <p>Сотрудник пишет задачу обычным языком в одно окно. HR Agent Studio — это окно. AI HR-партнёр ведёт запрос по карточке услуги из каталога: что можно сделать, какие данные нужны, кому можно и когда спросить человека. HR Hub берёт данные из систем, которые уже стоят. Модель в системы напрямую не ходит. Перед отпуском, командировкой и справкой человек подтверждает действие и получает один номер заявки.</p>
+      <p>Под Hub может встать ЦХД. С владельцами хранилища это ещё не решено. Если данные закроет хранилище, окно и партнёр всё равно нужны. Учётные системы не заменяются.</p>
+    </div>
+    <h3>3.2 Предполагаемые конкурентные преимущества</h3>
+    <div class="edit" contenteditable="true" data-k="advantage">
+      <ul>
+        <li>Слой поверх уже стоящих HR-систем, а не новая кадровая система и не ещё один портал.</li>
+        <li>Новая услуга подключается карточкой: сценарий и данные.</li>
+        <li>Пилот на живом ландшафте Ростелекома: HelpMe, HR-сервисы, документы.</li>
+        <li>Снаружи тот же приём: не выкидывать учётные системы заказчика.</li>
       </ul>
-    </section>
+    </div>
+  </section>
 
-    <section class="cell customers">
-      <h2><span class="num">2</span> Сегменты клиентов</h2>
-      <ul class="edit" contenteditable="true" data-k="customers">
-        <li>Пользователь: сотрудник. В пилоте — сотрудник Ростелекома. Руководитель — следующий контур, не первый.</li>
-        <li>Покупатель снаружи: HRD и CIO крупного распределённого работодателя, ОЦО, госорган или оператор с несколькими HR-системами и порталами.</li>
-        <li>Не наш первый клиент: компания, которой нужна одна коробочная HRM вместо всех систем сразу.</li>
-      </ul>
-    </section>
+  <section class="hc money">
+    <h2>5. Как продукт будет зарабатывать?</h2>
+    <h3>5.1 Модель монетизации</h3>
+    <div class="edit" contenteditable="true" data-k="money">
+      <p>Прямая продажа: лицензия платформы плюс внедрение и коннекторы к HR-системам заказчика. Пилот внутри Ростелекома доказывает схему. Экономия часов внутри не заменяет внешний контракт.</p>
+      <p>Покупатель снаружи — директор по персоналу и ИТ-директор крупного работодателя, у которого уже несколько HR-систем. Продажа идёт через контур ИТ и B2B.</p>
+    </div>
+    <h3>5.2 Средний чек</h3>
+    <div class="edit" contenteditable="true" data-k="check">
+      <p>Публичного среднего чека у этого класса нет. Гипотеза, не прайс: 5–12 млн ₽ в год плюс внедрение. Порог хакатона 30 млн ₽ — это около четырёх–шести таких контрактов. Воронки ещё нет, цифру подтвердят 8–10 разговоров с покупателями.</p>
+    </div>
+  </section>
 
-    <section class="cell metrics">
-      <h2><span class="num">8</span> Ключевые метрики</h2>
-      <ul class="edit" contenteditable="true" data-k="metrics">
-        <li>Доля запросов, закрытых без оператора.</li>
-        <li>Медианное время до результата и число переходов между системами.</li>
-        <li>Доля полей, подставленных из контекста, а не введённых заново.</li>
-        <li>Время ручной обработки владельца услуги, CSAT и усилие сотрудника.</li>
-        <li>Цена неверного действия: повторный разбор и трудозатраты после заявки, а не только оценка сотрудника сразу.</li>
-      </ul>
-    </section>
+  <section class="hc market">
+    <h2>4. Объем рынка</h2>
+    <div class="edit" contenteditable="true" data-k="market">
+      <p><b>TAM.</b> Весь рынок кадровых систем и порталов. Публичную оценку всего HR Tech сюда не ставим: она считает другой класс продуктов, не слой, который доводит фразу сотрудника до заявки.</p>
+      <p><b>SAM.</b> Крупные работодатели, у которых уже несколько HR-систем и которым нужен этот слой. Число таких компаний не посчитано.</p>
+      <p><b>SOM.</b> Долю на три года не заявляем. Ориентир фильтра — 30 млн ₽ внешней выручки, это арифметика от гипотезы чека, не доля рынка.</p>
+    </div>
+  </section>
 
-    <section class="cell channels">
-      <h2><span class="num">5</span> Каналы</h2>
-      <ul class="edit" contenteditable="true" data-k="channels">
-        <li>Пилот внутри Ростелекома — доказательство, не модель выручки.</li>
-        <li>Прямые продажи HRD и CIO через контур ИТ / B2B.</li>
-        <li>Дальше: пакеты карточек и коннекторы к уже стоящим HR-системам заказчика.</li>
-      </ul>
-    </section>
-
-    <section class="cell cost">
-      <h2><span class="num">7</span> Структура затрат</h2>
-      <ul class="edit" contenteditable="true" data-k="cost">
-        <li>Прототип: окно, каталог карточек в партнёре, подтверждение, журнал и коннекторы к HelpMe, HR-сервисам и контуру документов.</li>
-        <li>Доступ владельцев HelpMe, HR-сервисов и кадровых документов. Без них прототип не живой.</li>
-        <li>ИБ и персональные данные, замер baseline до разработки, интервью с внешними покупателями.</li>
-      </ul>
-    </section>
-
-    <section class="cell revenue">
-      <h2><span class="num">6</span> Потоки выручки</h2>
-      <ul class="edit" contenteditable="true" data-k="revenue">
-        <li>Гипотеза, не прайс: лицензия платформы 5–12 млн ₽ в год плюс внедрение и коннекторы.</li>
-        <li>Порог хакатона 30 млн ₽ — это выручка продукта. Четыре–шесть таких контрактов дают порядок суммы. Воронки ещё нет.</li>
-        <li>Экономия часов внутри Ростелекома доказывает эффект пилота и не заменяет внешний контракт.</li>
-      </ul>
-    </section>
-  </div>
+  <section class="hc team">
+    <div class="grow">
+      <h2>6. Команда. Кто сейчас есть в команде?</h2>
+      <p class="note">ФИО, роль, корпоративная почта и место работы вписывает команда. В материалах заявки состав ещё не зафиксирован, поэтому строки пустые.</p>
+      <table>
+        <tr><th>ФИО</th><th>Роль</th><th>Корп. почта</th><th>Место работы</th></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t1n"></td><td class="edit" contenteditable="true" data-k="t1r"></td><td class="edit" contenteditable="true" data-k="t1e"></td><td class="edit" contenteditable="true" data-k="t1w"></td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t2n"></td><td class="edit" contenteditable="true" data-k="t2r"></td><td class="edit" contenteditable="true" data-k="t2e"></td><td class="edit" contenteditable="true" data-k="t2w"></td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t3n"></td><td class="edit" contenteditable="true" data-k="t3r"></td><td class="edit" contenteditable="true" data-k="t3e"></td><td class="edit" contenteditable="true" data-k="t3w"></td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t4n"></td><td class="edit" contenteditable="true" data-k="t4r"></td><td class="edit" contenteditable="true" data-k="t4e"></td><td class="edit" contenteditable="true" data-k="t4w"></td></tr>
+      </table>
+    </div>
+    <img src="img/rostelecom.png" alt="Ростелеком. Технологии возможностей">
+  </section>
 </div>
 <script>
 (function(){
-  var KEY = "hr_agent_studio_lean_v3";
+  var KEY = "hr_hackathon_canvas_v1";
   var S = {};
   try { S = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { S = {}; }
   document.querySelectorAll("[data-k]").forEach(function(el){
@@ -119,6 +109,15 @@
     if (S[k]) el.innerHTML = S[k];
     el.addEventListener("input", function(){
       S[k] = el.innerHTML;
+      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+    });
+  });
+  document.querySelectorAll("[data-c]").forEach(function(el){
+    var k = el.getAttribute("data-c");
+    if (S[k] === "0") el.checked = false;
+    if (S[k] === "1") el.checked = true;
+    el.addEventListener("change", function(){
+      S[k] = el.checked ? "1" : "0";
       try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
     });
   });
