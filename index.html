@@ -12,7 +12,10 @@
 <nav class="site"><a class="brand" href="index.html">HR Hub</a><a href="index.html" class="on">Канвас</a><a href="bench.html">Бенч</a><a href="mvp.html">MVP</a></nav>
 <div class="hack">
   <header class="title">
-    <h1>Хакатон Canvas. Название проекта: HR Agent Studio</h1>
+    <div>
+      <h1>Хакатон Canvas. Название проекта: HR Agent Studio</h1>
+      <p class="save" id="save">Загрузка…</p>
+    </div>
     <img src="img/frii.png" alt="Центр корпоративных инноваций и продуктового развития, Акселератор ФРИИ">
   </header>
 
@@ -102,25 +105,117 @@
 <script>
 (function(){
   var KEY = "hr_hackathon_canvas_v1";
-  var S = {};
-  try { S = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { S = {}; }
-  document.querySelectorAll("[data-k]").forEach(function(el){
-    var k = el.getAttribute("data-k");
-    if (S[k]) el.innerHTML = S[k];
-    el.addEventListener("input", function(){
-      S[k] = el.innerHTML;
-      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+  var status = document.getElementById("save");
+  var applying = false;
+  var timer = null;
+  var saving = false;
+
+  function setStatus(text){ if (status) status.textContent = text; }
+
+  function collect(){
+    var data = {};
+    document.querySelectorAll("[data-k]").forEach(function(el){
+      data[el.getAttribute("data-k")] = el.innerHTML;
     });
+    document.querySelectorAll("[data-c]").forEach(function(el){
+      data["c:" + el.getAttribute("data-c")] = el.checked ? "1" : "0";
+    });
+    return data;
+  }
+
+  function apply(data){
+    if (!data) return;
+    applying = true;
+    document.querySelectorAll("[data-k]").forEach(function(el){
+      var k = el.getAttribute("data-k");
+      if (Object.prototype.hasOwnProperty.call(data, k)) el.innerHTML = data[k];
+    });
+    document.querySelectorAll("[data-c]").forEach(function(el){
+      var v = data["c:" + el.getAttribute("data-c")];
+      if (v === "0") el.checked = false;
+      if (v === "1") el.checked = true;
+    });
+    applying = false;
+  }
+
+  function remember(data){
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {}
+  }
+
+  function localCopy(){
+    try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e) { return null; }
+  }
+
+  function saveNow(){
+    if (applying) return Promise.resolve();
+    var data = collect();
+    remember(data);
+    saving = true;
+    setStatus("Сохраняю…");
+    return fetch("/api/canvas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+      keepalive: true
+    }).then(function(res){
+      saving = false;
+      if (!res.ok) throw new Error("save");
+      setStatus("Сохранено. Откроется на любом компьютере.");
+    }).catch(function(){
+      saving = false;
+      setStatus("Не удалось сохранить на сервер. Текст остался в этом браузере.");
+    });
+  }
+
+  function schedule(){
+    if (applying) return;
+    clearTimeout(timer);
+    setStatus("Есть правки…");
+    timer = setTimeout(saveNow, 600);
+  }
+
+  function load(){
+    if (timer || saving) return;
+    fetch("/api/canvas", { cache: "no-store" }).then(function(res){
+      if (!res.ok) throw new Error("load");
+      return res.json();
+    }).then(function(json){
+      if (json && json.data) {
+        apply(json.data);
+        remember(json.data);
+        setStatus("Сохранено. Откроется на любом компьютере.");
+        return;
+      }
+      var local = localCopy();
+      if (local && Object.keys(local).length) {
+        apply(local);
+        saveNow();
+        return;
+      }
+      setStatus("Сохранено. Откроется на любом компьютере.");
+    }).catch(function(){
+      var local = localCopy();
+      if (local) apply(local);
+      setStatus("Сервер недоступен. Показан текст этого браузера.");
+    });
+  }
+
+  document.querySelectorAll("[data-k]").forEach(function(el){
+    el.addEventListener("input", schedule);
   });
   document.querySelectorAll("[data-c]").forEach(function(el){
-    var k = el.getAttribute("data-c");
-    if (S[k] === "0") el.checked = false;
-    if (S[k] === "1") el.checked = true;
-    el.addEventListener("change", function(){
-      S[k] = el.checked ? "1" : "0";
-      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
-    });
+    el.addEventListener("change", schedule);
   });
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "hidden") {
+      clearTimeout(timer);
+      timer = null;
+      saveNow();
+    } else {
+      load();
+    }
+  });
+  load();
 })();
 </script>
 </body>
