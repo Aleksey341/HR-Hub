@@ -16,7 +16,15 @@ export default async function handler(req, res) {
         res.status(400).json({ error: "Нужен объект канваса" });
         return;
       }
-      const text = JSON.stringify(body);
+      const stored = await readCanvas();
+      const storedRev = stored && Number.isInteger(stored._rev) ? stored._rev : 0;
+      if (!Number.isInteger(body._rev) || body._rev !== storedRev) {
+        res.setHeader("Cache-Control", "no-store");
+        res.status(409).json({ error: "conflict", rev: storedRev });
+        return;
+      }
+      const next = { ...body, _rev: storedRev + 1 };
+      const text = JSON.stringify(next);
       if (text.length > 200000) {
         res.status(413).json({ error: "Слишком большой канвас" });
         return;
@@ -28,7 +36,7 @@ export default async function handler(req, res) {
         contentType: "application/json",
       });
       res.setHeader("Cache-Control", "no-store");
-      res.status(200).json({ ok: true });
+      res.status(200).json({ ok: true, rev: next._rev });
       return;
     }
     res.setHeader("Allow", "GET, POST");

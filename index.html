@@ -114,6 +114,10 @@
   var applying = false;
   var timer = null;
   var saving = false;
+  var dirty = false;
+  var serverRev = 0;
+  var lastSnap = "";
+  var loadGen = 0;
 
   function setStatus(text){ if (status) status.textContent = text; }
 
@@ -126,6 +130,19 @@
       data["c:" + el.getAttribute("data-c")] = el.checked ? "1" : "0";
     });
     return data;
+  }
+
+  function snapshot(data){
+    var copy = {};
+    Object.keys(data).forEach(function(key){
+      if (key !== "_rev") copy[key] = data[key];
+    });
+    return JSON.stringify(copy);
+  }
+
+  function fieldFocused(){
+    var el = document.activeElement;
+    return !!(el && el.hasAttribute && el.hasAttribute("data-k"));
   }
 
   function apply(data){
@@ -151,10 +168,19 @@
     try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e) { return null; }
   }
 
-  function saveNow(){
-    if (applying) return Promise.resolve();
+  function saveNow(force){
+    if (applying || saving) return Promise.resolve();
+    if (!dirty && !force) return Promise.resolve();
     var data = collect();
+    var postedSnap = snapshot(data);
+    if (!force && postedSnap === lastSnap) {
+      dirty = false;
+      setStatus("Сохранено. Откроется на любом компьютере.");
+      return Promise.resolve();
+    }
+    data._rev = serverRev;
     remember(data);
+    dirty = false;
     saving = true;
     setStatus("Сохраняю…");
     return fetch("/api/canvas", {
@@ -164,43 +190,78 @@
       keepalive: true
     }).then(function(res){
       saving = false;
+      if (res.status === 409) {
+        dirty = true;
+        setStatus("Не сохранилось: на другом компьютере уже есть новая версия. Обновите страницу и внесите правку ещё раз.");
+        return { conflict: true };
+      }
       if (!res.ok) throw new Error("save");
+      return res.json();
+    }).then(function(json){
+      if (!json || json.conflict) return;
+      if (Number.isInteger(json.rev)) serverRev = json.rev;
+      if (snapshot(collect()) !== postedSnap) {
+        dirty = true;
+        schedule();
+        return;
+      }
+      lastSnap = postedSnap;
       setStatus("Сохранено. Откроется на любом компьютере.");
     }).catch(function(){
       saving = false;
+      dirty = true;
       setStatus("Не удалось сохранить на сервер. Текст остался в этом браузере.");
     });
   }
 
   function schedule(){
     if (applying) return;
+    dirty = true;
     clearTimeout(timer);
     setStatus("Есть правки…");
     timer = setTimeout(saveNow, 600);
   }
 
   function load(){
-    if (timer || saving) return;
+    if (timer || saving || dirty) return;
+    var gen = ++loadGen;
     fetch("/api/canvas", { cache: "no-store" }).then(function(res){
       if (!res.ok) throw new Error("load");
       return res.json();
     }).then(function(json){
+      if (gen !== loadGen || dirty || saving) return;
       if (json && json.data) {
+        var snap = snapshot(json.data);
+        var rev = Number.isInteger(json.data._rev) ? json.data._rev : 0;
+        if (snap === lastSnap) {
+          serverRev = rev;
+          setStatus("Сохранено. Откроется на любом компьютере.");
+          return;
+        }
+        if (fieldFocused()) return;
+        serverRev = rev;
+        lastSnap = snap;
         apply(json.data);
         remember(json.data);
         setStatus("Сохранено. Откроется на любом компьютере.");
         return;
       }
       var local = localCopy();
-      if (local && Object.keys(local).length) {
+      if (local && Object.keys(local).length && !lastSnap) {
         apply(local);
-        saveNow();
+        serverRev = 0;
+        dirty = true;
+        saveNow(true);
         return;
       }
       setStatus("Сохранено. Откроется на любом компьютере.");
     }).catch(function(){
       var local = localCopy();
-      if (local) apply(local);
+      if (local && !lastSnap) {
+        apply(local);
+        lastSnap = snapshot(local);
+        if (Number.isInteger(local._rev)) serverRev = local._rev;
+      }
       setStatus("Сервер недоступен. Показан текст этого браузера.");
     });
   }
@@ -240,9 +301,9 @@
     placeCaret(del, false);
   }
   function insertMarked(text){
-    if (!text) return;
+    if (!text) return false;
     var sel = window.getSelection();
-    if (!sel.rangeCount) return;
+    if (!sel.rangeCount) return false;
     var range = sel.getRangeAt(0);
     if (!range.collapsed) traceDelete(range);
     var live = window.getSelection();
@@ -252,13 +313,14 @@
       var node = document.createTextNode(text);
       range.insertNode(node);
       placeCaret(node, true);
-      return;
+      return true;
     }
     var mark = document.createElement("span");
     mark.className = "by-2";
     mark.textContent = text;
     range.insertNode(mark);
     placeCaret(mark, true);
+    return true;
   }
   function rangeForDelete(backward){
     var sel = window.getSelection();
@@ -318,8 +380,9 @@
       if (role() !== "2" || applying) return;
       var type = e.inputType || "";
       if (type === "insertText") {
-        e.preventDefault();
-        insertMarked(e.data || "");
+        var marked = false;
+        try { marked = insertMarked(e.data || ""); } catch (err) { marked = false; }
+        if (marked) e.preventDefault();
         schedule();
         return;
       }
@@ -340,6 +403,7 @@
       schedule();
     });
     el.addEventListener("input", schedule);
+    el.addEventListener("blur", function(){ load(); });
   });
   document.querySelectorAll("[data-c]").forEach(function(el){
     el.addEventListener("change", schedule);
@@ -348,11 +412,12 @@
     if (document.visibilityState === "hidden") {
       clearTimeout(timer);
       timer = null;
-      saveNow();
+      if (dirty) saveNow();
     } else {
       load();
     }
   });
+  setInterval(load, 4000);
   load();
 })();
 </script>
