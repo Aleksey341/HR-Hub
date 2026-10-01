@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HR Hub · канвас, 1 октября</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="sheet">
+<nav class="site"><a class="brand" href="index.html">HR Hub</a><a href="index.html">Канвас</a><a href="canvas-v2.html" class="on">Канвас · 1 октября</a></nav>
+<div class="hack">
+  <header class="title">
+    <div>
+      <h1>Хакатон Canvas. Название проекта: HR Agent Studio. Версия после встречи 1 октября</h1>
+      <p class="save" id="save">Загрузка…</p>
+      <div class="who">
+        <button type="button" id="pptx">Скачать PPTX</button>
+      </div>
+      <p class="proof">Ошибки в словах, грамматике и синтаксисе правятся сами после короткой паузы.</p>
+    </div>
+    <img src="img/frii.png" alt="Центр корпоративных инноваций и продуктового развития, Акселератор ФРИИ">
+  </header>
+
+  <section class="hc seg">
+    <h2>1. Сегменты потребителей</h2>
+    <h3>1.1 Конечные пользователи</h3>
+    <div class="edit" contenteditable="true" data-k="users">
+      <p>Три потребителя, не один.</p>
+      <p>Сотрудник компании с несколькими HR-системами. В пилоте — сотрудник Ростелекома. Ему нужно понять, куда подать заявку, и получить один номер.</p>
+      <p>Команда, которая развивает HR-процессы: придумывает услугу и доводит её до автоматизации.</p>
+      <p>ИТ, которое связывает системы и сопровождает интеграции.</p>
+      <p>Покупатель — не сотрудник. Договор заключает компания: директор по персоналу отвечает за процесс и агентов, ИТ-директор — за шину.</p>
+    </div>
+    <h3>1.2 К какому сегменту бизнеса внутри Ростелеком относится ваша идея:</h3>
+    <ul class="segs">
+      <li><label><input type="checkbox" data-c="it" checked> ИТ</label></li>
+      <li><label><input type="checkbox" data-c="b2b" checked> B2B</label></li>
+      <li><label><input type="checkbox" data-c="wink"> B2C Wink</label></li>
+      <li><label><input type="checkbox" data-c="core"> B2C Core</label></li>
+      <li><label><input type="checkbox" data-c="b20"> B20</label></li>
+      <li><label><input type="checkbox" data-c="solar"> Солар</label></li>
+      <li><label><input type="checkbox" data-c="turbo"> Турбо</label></li>
+    </ul>
+  </section>
+
+  <section class="hc problem">
+    <h2>2. Проблема</h2>
+    <p class="note">Проблема конечных пользователей, которую решает продукт.</p>
+    <div class="edit" contenteditable="true" data-k="problem">
+      <p><b>Сотрудник.</b> Не понимает, в каком окне получить услугу: HelpMe, HR-сервисы, портал. Заново входит в систему и заново вводит уже известные данные. Статус и ошибки смотрит в разных местах. Системы для него чёрный ящик: про интеграции он не думает.</p>
+      <p>Ориентир времени на один запрос, это не замер: найти окно 3–7 мин, войти 3–5 мин, заполнить около 5 мин, посмотреть статус около 5 мин, разобрать ошибку ещё около 5 мин. В рублях эту экономию не продаём.</p>
+      <p><b>Команда развития HR.</b> Каждая новая услуга — отдельная локальная автоматизация. Доработка вроде отпуска занимает около полугода, вместе с описанием — дольше. Пока нет задания и разработчиков, услуга не выходит.</p>
+      <p><b>ИТ.</b> Содержание нескольких HR-систем и связки «каждый с каждым» забирают деньги и людей. С каждой новой системой ландшафт интеграций тяжелеет. Стоимость поддержки отдельных интерфейсов под каждую услугу ещё не заложена.</p>
+    </div>
+  </section>
+
+  <section class="hc solution">
+    <h2>3. Решение</h2>
+    <h3>3.1 Краткое описание</h3>
+    <div class="edit" contenteditable="true" data-k="solution">
+      <p>HR Agent Studio — три части. У каждой своё имя и свой потребитель.</p>
+      <p><b>Единое окно</b> — интерфейс сотрудника. Он описывает задачу обычным языком, подтверждает подготовленное действие и получает один номер заявки. Отпуск, командировка и справка проходят здесь. Это единственная часть, которую правильно называть окном.</p>
+      <p><b>Модуль управления клиентскими путями</b> — для команды, которая развивает HR. Здесь настраивают агентов и оркестратор: путь услуги, нужные данные, момент, когда спросить человека. Агент в системы сам не ходит.</p>
+      <p><b>Интеграционная шина (ESB)</b> — связывающее звено для ИТ. Через неё системы обмениваются разрешёнными сведениями, заявка предзаполняется, команда уходит на выполнение и возвращается один статус. ЦХД может закрыть данные, а может не закрыть: шина на это не опирается.</p>
+    </div>
+    <h3>3.2 Предполагаемые конкурентные преимущества</h3>
+    <div class="edit" contenteditable="true" data-k="advantage">
+      <ul>
+        <li>Окно закрывает сотрудника, агенты — развитие HR, шина — ИТ. Учётные системы не заменяются.</li>
+        <li>Новая услуга собирается путём и агентом, без отдельной связки «каждый с каждым» и без полугода на каждую доработку.</li>
+        <li>Риск: минуты сотрудника ещё не бюджет покупателя. Канал B2B и чек за срок хакатона не проверены. Встреча по ЦХД может не дать слоя данных.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="hc money">
+    <h2>5. Как продукт будет зарабатывать?</h2>
+    <h3>5.1 Модель монетизации</h3>
+    <div class="edit" contenteditable="true" data-k="money">
+      <p>Прямая продажа компании: лицензия платформы, внедрение и коннекторы к её HR-системам. Сотруднику лицензию не продаём: у него нет бюджета на интеграции.</p>
+      <p>Покупатель — директор по персоналу и ИТ-директор крупного работодателя, у которого уже несколько HR-систем. Продажа внешнему заказчику идёт через контур B2B Ростелекома.</p>
+    </div>
+    <h3>5.2 Средний чек</h3>
+    <div class="edit" contenteditable="true" data-k="check">
+      <p>Гипотеза, к которой вернулись на встрече: 3–5 млн ₽ в год плюс внедрение. Цифра 5–12 млн ₽ с бюджетом трёх проблем не связана. Пока посчитаны минуты сотрудника, не стоимость интеграций и не поддержка отдельных интерфейсов.</p>
+    </div>
+  </section>
+
+  <section class="hc market">
+    <h2>4. Объем рынка</h2>
+    <div class="edit" contenteditable="true" data-k="market">
+      <p><b>TAM.</b> 45 млрд. ₽ - весь рынок РФ HR TECH решений</p>
+      <p><b>SAM.</b> 9 млрд. ₽ - крупные компании со сложной HR экосистемой</p>
+      <p><b>SOM.</b> 300 млн ₽ на 4 года на встрече не защитили: из TAM и из чека 3–5 млн ₽ эта сумма не выводится. Долю рынка не заявляем.</p>
+    </div>
+  </section>
+
+  <section class="hc team">
+    <div class="grow">
+      <h2>6. Команда. Кто сейчас есть в команде?</h2>
+      <p class="note">ФИО, роль, корпоративная почта и место работы вписывает команда. В материалах заявки состав ещё не зафиксирован, поэтому строки пустые.</p>
+      <table>
+        <tr><th>ФИО</th><th>Роль</th><th>Корп. почта</th><th>Место работы</th></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t1n"></td><td class="edit" contenteditable="true" data-k="t1r"></td><td class="edit" contenteditable="true" data-k="t1e"></td><td class="edit" contenteditable="true" data-k="t1w"></td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t2n"></td><td class="edit" contenteditable="true" data-k="t2r"></td><td class="edit" contenteditable="true" data-k="t2e"></td><td class="edit" contenteditable="true" data-k="t2w"></td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t3n"></td><td class="edit" contenteditable="true" data-k="t3r"></td><td class="edit" contenteditable="true" data-k="t3e"></td><td class="edit" contenteditable="true" data-k="t3w"></td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t4n"></td><td class="edit" contenteditable="true" data-k="t4r"></td><td class="edit" contenteditable="true" data-k="t4e"></td><td class="edit" contenteditable="true" data-k="t4w"></td></tr>
+      </table>
+    </div>
+    <img src="img/rostelecom.png" alt="Ростелеком. Технологии возможностей">
+  </section>
+</div>
+<script>
+(function(){
+  var KEY = "hr_hackathon_canvas_v2";
+  var status = document.getElementById("save");
+  var applying = false;
+  var timer = null;
+  var dirty = false;
+
+  function setStatus(text){ if (status) status.textContent = text; }
+
+  function collect(){
+    var data = {};
+    document.querySelectorAll("[data-k]").forEach(function(el){
+      data[el.getAttribute("data-k")] = el.innerHTML;
+    });
+    document.querySelectorAll("[data-c]").forEach(function(el){
+      data["c:" + el.getAttribute("data-c")] = el.checked ? "1" : "0";
+    });
+    return data;
+  }
+
+  function apply(data){
+    if (!data) return;
+    applying = true;
+    document.querySelectorAll("[data-k]").forEach(function(el){
+      var k = el.getAttribute("data-k");
+      if (Object.prototype.hasOwnProperty.call(data, k)) el.innerHTML = data[k];
+    });
+    document.querySelectorAll("[data-c]").forEach(function(el){
+      var v = data["c:" + el.getAttribute("data-c")];
+      if (v === "0") el.checked = false;
+      if (v === "1") el.checked = true;
+    });
+    applying = false;
+  }
+
+  function remember(data){
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {}
+  }
+
+  function localCopy(){
+    try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e) { return null; }
+  }
+
+  function saveNow(){
+    if (applying) return;
+    remember(collect());
+    dirty = false;
+    setStatus("Сохранено в этом браузере.");
+  }
+
+  function schedule(){
+    if (applying) return;
+    dirty = true;
+    clearTimeout(timer);
+    setStatus("Есть правки…");
+    timer = setTimeout(saveNow, 600);
+  }
+
+  function loadLocal(){
+    var local = localCopy();
+    if (local) apply(local);
+    setStatus("Сохранено в этом браузере.");
+  }
+
+  var proofTimer = null;
+  var proofGen = 0;
+  var BLOCK = { P:1, DIV:1, LI:1, H1:1, H2:1, H3:1, TR:1, BR:1 };
+
+  function liveText(root){
+    var nodes = [];
+    var text = "";
+    function gap(){
+      if (text && !/\s$/.test(text)) text += "\n";
+    }
+    function walk(node, top){
+      if (node.nodeType === 3) {
+        nodes.push({ node: node, start: text.length });
+        text += node.nodeValue;
+        return;
+      }
+      if (node.nodeType !== 1 || node.tagName === "DEL") return;
+      var block = !top && (node.tagName === "BR" || BLOCK[node.tagName]);
+      if (block) gap();
+      for (var i = 0; i < node.childNodes.length; i++) walk(node.childNodes[i], false);
+      if (block && node.tagName !== "BR") gap();
+    }
+    walk(root, true);
+    return { text: text, nodes: nodes };
+  }
+  function selectionOffset(el, map){
+    var sel = window.getSelection();
+    if (!sel.rangeCount) return null;
+    var node = sel.anchorNode;
+    if (!node || node.nodeType !== 3 || !el.contains(node)) return null;
+    for (var i = 0; i < map.nodes.length; i++) {
+      if (map.nodes[i].node === node) return map.nodes[i].start + sel.anchorOffset;
+    }
+    return null;
+  }
+  function placeAt(el, offset){
+    var map = liveText(el);
+    var sel = window.getSelection();
+    var range = document.createRange();
+    var best = null;
+    for (var i = 0; i < map.nodes.length; i++) {
+      var item = map.nodes[i];
+      var len = item.node.nodeValue.length;
+      if (offset >= item.start && offset <= item.start + len) {
+        range.setStart(item.node, offset - item.start);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return;
+      }
+      if (item.start + len <= offset) best = item;
+    }
+    if (!best) return;
+    range.setStart(best.node, best.node.nodeValue.length);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  function applyFix(map, fix){
+    var end = fix.offset + fix.length;
+    var startNode = null;
+    var endNode = null;
+    for (var i = 0; i < map.nodes.length; i++) {
+      var item = map.nodes[i];
+      var len = item.node.nodeValue.length;
+      var nodeEnd = item.start + len;
+      if (!startNode && fix.offset >= item.start && fix.offset < nodeEnd) {
+        startNode = { node: item.node, local: fix.offset - item.start, nodeEnd: nodeEnd };
+      }
+      if (end > item.start && end <= nodeEnd) {
+        endNode = { node: item.node, local: end - item.start };
+      }
+    }
+    if (!startNode || !endNode || startNode.node !== endNode.node) return false;
+    if (end > startNode.nodeEnd) return false;
+    var old = startNode.node.nodeValue.slice(startNode.local, endNode.local);
+    if (!old || old === fix.value) return false;
+    var range = document.createRange();
+    range.setStart(startNode.node, startNode.local);
+    range.setEnd(endNode.node, endNode.local);
+    range.deleteContents();
+    range.insertNode(document.createTextNode(fix.value));
+    return true;
+  }
+  function armProof(el){
+    clearTimeout(proofTimer);
+    proofTimer = setTimeout(function(){ runProof(el); }, 1400);
+  }
+  function runProof(el){
+    if (!el || applying) return;
+    var map = liveText(el);
+    var text = map.text;
+    if (!/[А-Яа-яЁё]/.test(text)) return;
+    var token = ++proofGen;
+    var caret = document.activeElement === el ? selectionOffset(el, map) : null;
+    fetch("/api/proof", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text })
+    }).then(function(res){
+      if (!res.ok) throw new Error("proof");
+      return res.json();
+    }).then(function(json){
+      if (token !== proofGen || applying) return;
+      var fresh = liveText(el);
+      if (fresh.text !== text) return;
+      var fixes = (json && json.fixes) || [];
+      if (!fixes.length) return;
+      var nextCaret = caret;
+      var changed = 0;
+      applying = true;
+      try {
+        for (var i = fixes.length - 1; i >= 0; i--) {
+          var fix = fixes[i];
+          var current = liveText(el);
+          if (applyFix(current, fix)) {
+            changed++;
+            if (nextCaret !== null) {
+              if (nextCaret > fix.offset + fix.length) nextCaret += fix.value.length - fix.length;
+              else if (nextCaret >= fix.offset) nextCaret = fix.offset + fix.value.length;
+            }
+          }
+        }
+      } finally {
+        applying = false;
+      }
+      if (!changed) return;
+      if (nextCaret !== null && document.activeElement === el) placeAt(el, nextCaret);
+      schedule();
+    }).catch(function(){});
+  }
+
+  document.querySelectorAll("[data-k]").forEach(function(el){
+    el.addEventListener("paste", function(e){
+      e.preventDefault();
+      var text = (e.clipboardData && e.clipboardData.getData("text/plain")) || "";
+      if (!text) return;
+      var ok = false;
+      try { ok = document.execCommand("insertText", false, text); } catch (err) { ok = false; }
+      if (!ok) {
+        var sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        var range = sel.getRangeAt(0);
+        range.deleteContents();
+        var node = document.createTextNode(text);
+        range.insertNode(node);
+        range.setStartAfter(node);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        schedule();
+        armProof(el);
+      }
+    });
+    el.addEventListener("input", function(){
+      schedule();
+      armProof(el);
+    });
+    el.addEventListener("blur", function(){
+      clearTimeout(proofTimer);
+      runProof(el);
+    });
+  });
+  document.querySelectorAll("[data-c]").forEach(function(el){
+    el.addEventListener("change", schedule);
+  });
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState !== "hidden") return;
+    clearTimeout(timer);
+    timer = null;
+    if (dirty) saveNow();
+  });
+  var pptxBtn = document.getElementById("pptx");
+  if (pptxBtn) pptxBtn.addEventListener("click", function(){
+    pptxBtn.disabled = true;
+    setStatus("Готовлю презентацию…");
+    fetch("/api/pptx", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(collect())
+    }).then(function(res){
+      if (!res.ok) throw new Error("pptx");
+      return res.blob();
+    }).then(function(blob){
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement("a");
+      link.href = url;
+      link.download = "HR Agent Studio — Canvas 1 октября.pptx";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setStatus("Презентация скачана.");
+    }).catch(function(){
+      setStatus("Не удалось собрать презентацию.");
+    }).then(function(){
+      pptxBtn.disabled = false;
+    });
+  });
+  loadLocal();
+})();
+</script>
+</body>
+</html>
