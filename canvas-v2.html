@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HR Hub · канвас, 1 октября</title>
+<title>HR Hub · канвас, 2 октября</title>
 <link rel="stylesheet" href="styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body class="sheet">
-<nav class="site"><a class="brand" href="index.html">HR Hub</a><a href="index.html">Канвас</a><a href="canvas-v2.html" class="on">Канвас · 1 октября</a></nav>
+<nav class="site"><a class="brand" href="index.html">HR Hub</a><a href="index.html">Канвас</a><a href="canvas-v2.html" class="on">Канвас · 2 октября</a></nav>
 <div class="hack">
   <header class="title">
     <div>
-      <h1>Хакатон Canvas. Название проекта: HR Agent Studio. Версия после встречи 1 октября</h1>
+      <h1>Хакатон Canvas. Название проекта: HR Agent Studio</h1>
       <p class="save" id="save">Загрузка…</p>
       <div class="who">
         <button type="button" id="pptx">Скачать PPTX</button>
@@ -27,11 +27,10 @@
     <h2>1. Сегменты потребителей</h2>
     <h3>1.1 Конечные пользователи</h3>
     <div class="edit" contenteditable="true" data-k="users">
-      <p>Три потребителя, не один.</p>
-      <p>Сотрудник компании с несколькими HR-системами. В пилоте — сотрудник Ростелекома. Ему нужно понять, куда подать заявку, и получить один номер.</p>
-      <p>Команда, которая развивает HR-процессы: придумывает услугу и доводит её до автоматизации.</p>
-      <p>ИТ, которое связывает системы и сопровождает интеграции.</p>
-      <p>Покупатель — не сотрудник. Договор заключает компания: директор по персоналу отвечает за процесс и агентов, ИТ-директор — за шину.</p>
+      <p>Сотрудник компании с несколькими HR-системами</p>
+      <p>Команда, которая развивает HR-процессы</p>
+      <p>ИТ, которая сопровождает интеграции</p>
+      <p>Руководство компании, заинтересованные в эффективности процессов</p>
     </div>
     <h3>1.2 К какому сегменту бизнеса внутри Ростелеком относится ваша идея:</h3>
     <ul class="segs">
@@ -49,10 +48,17 @@
     <h2>2. Проблема</h2>
     <p class="note">Проблема конечных пользователей, которую решает продукт.</p>
     <div class="edit" contenteditable="true" data-k="problem">
-      <p><b>Сотрудник.</b> Сам определяет, какой сервис нужен под задачу: HelpMe, HR-сервисы, портал. Потом ищет, где этот сервис открыть: имя на портале часто не совпадает со словами запроса. Затем заново вводит данные, чтобы войти и оформить заявку. Статус и ошибки смотрит отдельно. Системы для него чёрный ящик: про интеграции он не думает.</p>
-      <p>Ориентир времени на один запрос, это не замер: найти окно 3–7 мин, войти 3–5 мин, заполнить около 5 мин, посмотреть статус около 5 мин, разобрать ошибку ещё около 5 мин. В рублях эту экономию не продаём.</p>
-      <p><b>Команда развития HR.</b> Каждая новая услуга — отдельная локальная автоматизация. Доработка вроде отпуска занимает около полугода, вместе с описанием — дольше. Пока нет задания и разработчиков, услуга не выходит.</p>
-      <p><b>ИТ.</b> Содержание нескольких HR-систем и связки «каждый с каждым» забирают деньги и людей. С каждой новой системой ландшафт интеграций тяжелеет. Стоимость поддержки отдельных интерфейсов под каждую услугу ещё не заложена.</p>
+      <p><b>Сотрудник</b></p>
+      <p>- Для решения задачи вынужден искать нужный сервис и отслеживать статусы в разных системах и интерфейсах, что занимает в среднем 15–20 мин. 7 200 ₽ потерь на одного сотрудника в год</p>
+      <p>- Данные о сотруднике из корп. систем не переиспользуются при авторизации и оформлении заявок</p>
+      <p><b>Команда развития HR</b></p>
+      <p>Необходимость в навигации сотрудников (консультации, памятки) и длительное ожидание реализации продукта</p>
+      <p>Разработка: 5–20 млн ₽ в год на сервис</p>
+      <p><b>ИТ</b></p>
+      <p>- Потребность в локальной автоматизации и сопровождении каждого сервиса/услуги</p>
+      <p>- Ландшафт интеграций усложняется с ростом систем/сервисов</p>
+      <p>Интеграции: 1–5 млн ₽ за связку</p>
+      <p>Поддержка сервисов: 3–8 млн ₽ на сервис</p>
     </div>
   </section>
 
@@ -60,17 +66,16 @@
     <h2>3. Решение</h2>
     <h3>3.1 Краткое описание</h3>
     <div class="edit" contenteditable="true" data-k="solution">
-      <p>HR Agent Studio — три части. У каждой своё имя и свой потребитель.</p>
-      <p><b>Единое окно</b> — интерфейс сотрудника. Оно принимает его слова, само сопоставляет их с услугой и открывает её: не нужно угадывать, что ДМС на портале называется «Здоровье». Сотрудник подтверждает подготовленное действие и получает один номер заявки. Отпуск, командировка и справка проходят здесь. Это единственная часть, которую правильно называть окном.</p>
-      <p><b>Модуль управления клиентскими путями</b> — для команды, которая развивает HR. Здесь настраивают агентов и оркестратор: путь услуги, нужные данные, момент, когда спросить человека. Агент в системы сам не ходит.</p>
-      <p><b>Интеграционная шина (ESB)</b> — связывающее звено для ИТ. Через неё системы обмениваются разрешёнными сведениями, заявка предзаполняется, команда уходит на выполнение и возвращается один статус. ЦХД может закрыть данные, а может не закрыть: шина на это не опирается.</p>
+      <p><b>HR Agent Studio</b></p>
+      <p>Единое окно для получения HR-сервисов/услуг, которое объединяет пользовательский интерфейс, интеллектуальное сопровождение и интеграционный слой корпоративных систем</p>
+      <p>AI HR-партнёр — агент который анализирует запрос и управляет клиентским путём: самостоятельно выбирает нужную услугу и сопровождает пользователя до результата</p>
+      <p>HR Hub — интеграционная шина (ESB), через которую HR-сервисы и информационные системы/AI агенты безопасно обмениваются данными</p>
     </div>
     <h3>3.2 Предполагаемые конкурентные преимущества</h3>
     <div class="edit" contenteditable="true" data-k="advantage">
       <ul>
-        <li>Окно закрывает сотрудника, агенты — развитие HR, шина — ИТ. Учётные системы не заменяются.</li>
-        <li>Новая услуга собирается путём и агентом, без отдельной связки «каждый с каждым» и без полугода на каждую доработку.</li>
-        <li>Риск: минуты сотрудника ещё не бюджет покупателя. Канал B2B и чек за срок хакатона не проверены. Встреча по ЦХД может не дать слоя данных.</li>
+        <li>HR Agent Studio выступает источником консолидированных данных не заменяя существующие системы</li>
+        <li>Масштабирование: новые HR-сервисы и субагенты подключаются к единому контуру через HR Hub без перестройки всей системы и создания множества интеграций «каждый с каждым»</li>
       </ul>
     </div>
   </section>
@@ -79,12 +84,11 @@
     <h2>5. Как продукт будет зарабатывать?</h2>
     <h3>5.1 Модель монетизации</h3>
     <div class="edit" contenteditable="true" data-k="money">
-      <p>Прямая продажа компании: лицензия платформы, внедрение и коннекторы к её HR-системам. Сотруднику лицензию не продаём: у него нет бюджета на интеграции.</p>
-      <p>Покупатель — директор по персоналу и ИТ-директор крупного работодателя, у которого уже несколько HR-систем. Продажа внешнему заказчику идёт через контур B2B Ростелекома.</p>
+      <p>Прямая продажа: лицензия платформы плюс внедрение</p>
     </div>
     <h3>5.2 Средний чек</h3>
     <div class="edit" contenteditable="true" data-k="check">
-      <p>Гипотеза, к которой вернулись на встрече: 3–5 млн ₽ в год плюс внедрение. Цифра 5–12 млн ₽ с бюджетом трёх проблем не связана. Пока посчитаны минуты сотрудника, не стоимость интеграций и не поддержка отдельных интерфейсов.</p>
+      <p>~3–10 млн ₽ в год плюс внедрение (в зависимости от численности сотрудников)</p>
     </div>
   </section>
 
@@ -93,20 +97,19 @@
     <div class="edit" contenteditable="true" data-k="market">
       <p><b>TAM.</b> 45 млрд. ₽ - весь рынок РФ HR TECH решений</p>
       <p><b>SAM.</b> 9 млрд. ₽ - крупные компании со сложной HR экосистемой</p>
-      <p><b>SOM.</b> 300 млн ₽ на 4 года на встрече не защитили: из TAM и из чека 3–5 млн ₽ эта сумма не выводится. Долю рынка не заявляем.</p>
+      <p><b>SOM.</b> 300 млн ₽ - потенциал на 3 года</p>
     </div>
   </section>
 
   <section class="hc team">
     <div class="grow">
       <h2>6. Команда. Кто сейчас есть в команде?</h2>
-      <p class="note">Корпоративная почта пока не указана.</p>
       <table>
         <tr><th>ФИО</th><th>Роль</th><th>Корп. почта</th><th>Место работы</th></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t1n">Солодовников Игорь Васильевич</td><td class="edit" contenteditable="true" data-k="t1r">Тим лидер</td><td class="edit" contenteditable="true" data-k="t1e"></td><td class="edit" contenteditable="true" data-k="t1w">Ростелеком</td></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t2n">Бурнаев Дмитрий Александрович</td><td class="edit" contenteditable="true" data-k="t2r">Руководитель проектов</td><td class="edit" contenteditable="true" data-k="t2e"></td><td class="edit" contenteditable="true" data-k="t2w">Ростелеком</td></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t3n">Капитонова Екатерина Олеговна</td><td class="edit" contenteditable="true" data-k="t3r">Руководитель проектов</td><td class="edit" contenteditable="true" data-k="t3e"></td><td class="edit" contenteditable="true" data-k="t3w">Ростелеком</td></tr>
-        <tr><td class="edit" contenteditable="true" data-k="t4n">Денисов Алексей Витальевич</td><td class="edit" contenteditable="true" data-k="t4r">Руководитель проектов</td><td class="edit" contenteditable="true" data-k="t4e"></td><td class="edit" contenteditable="true" data-k="t4w">Ростелеком</td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t1n">Солодовников Игорь Васильевич</td><td class="edit" contenteditable="true" data-k="t1r">менеджер продукта</td><td class="edit" contenteditable="true" data-k="t1e">solodovnikov.igor@rt.ru</td><td class="edit" contenteditable="true" data-k="t1w">Ростелеком ЦК БОРУП</td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t2n">Капитонова Екатерина Олеговна</td><td class="edit" contenteditable="true" data-k="t2r">менеджер проекта</td><td class="edit" contenteditable="true" data-k="t2e">ekaterina.kapitonova@rt.ru</td><td class="edit" contenteditable="true" data-k="t2w">Ростелеком ЦК БОРУП</td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t3n">Денисов Алексей Витальевич</td><td class="edit" contenteditable="true" data-k="t3r">разработчик</td><td class="edit" contenteditable="true" data-k="t3e">denisov.aleksey.v@rt.ru</td><td class="edit" contenteditable="true" data-k="t3w">Ростелеком ЦК БОРУП</td></tr>
+        <tr><td class="edit" contenteditable="true" data-k="t4n">Бурнаев Дмитрий Александрович</td><td class="edit" contenteditable="true" data-k="t4r">аналитик</td><td class="edit" contenteditable="true" data-k="t4e">dmitriy.burnaev@rt.ru</td><td class="edit" contenteditable="true" data-k="t4w">Ростелеком ЦК БОРУП</td></tr>
       </table>
     </div>
     <img src="img/rostelecom.png" alt="Ростелеком. Технологии возможностей">
@@ -114,7 +117,7 @@
 </div>
 <script>
 (function(){
-  var KEY = "hr_hackathon_canvas_v2";
+  var KEY = "hr_hackathon_canvas_2026_10_02";
   var status = document.getElementById("save");
   var applying = false;
   var timer = null;
@@ -378,7 +381,7 @@
       var url = URL.createObjectURL(blob);
       var link = document.createElement("a");
       link.href = url;
-      link.download = "HR Agent Studio — Canvas 1 октября.pptx";
+      link.download = "HR Agent Studio — Canvas 2 октября.pptx";
       document.body.appendChild(link);
       link.click();
       link.remove();
