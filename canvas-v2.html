@@ -13,12 +13,15 @@
 <div class="hack">
   <header class="title">
     <div>
-      <h1>Хакатон Canvas. Название проекта: HR Agent Studio</h1>
+      <h1 class="edit" contenteditable="true" data-k="title">Хакатон Canvas. Название проекта: HR Agent Studio</h1>
       <p class="save" id="save">Загрузка…</p>
       <div class="who">
         <button type="button" id="pptx">Скачать PPTX</button>
+        <label class="upload">Загрузить PDF<input id="pdf" type="file" accept="application/pdf,.pdf"></label>
       </div>
-      <p class="proof">Ошибки в словах, грамматике и синтаксисе правятся сами после короткой паузы.</p>
+      <p class="proof">Ошибки в словах, грамматике и синтаксисе правятся сами после короткой паузы. Загруженный PDF можно править в полях.</p>
+      <h3>Формула</h3>
+      <div class="edit formula" contenteditable="true" data-k="formula"></div>
     </div>
     <img src="img/frii.png" alt="Центр корпоративных инноваций и продуктового развития, Акселератор ФРИИ">
   </header>
@@ -115,6 +118,8 @@
     <img src="img/rostelecom.png" alt="Ростелеком. Технологии возможностей">
   </section>
 </div>
+<script src="js/pdf.min.js"></script>
+<script src="canvas-pdf.js"></script>
 <script>
 (function(){
   var KEY = "hr_hackathon_canvas_2026_10_02";
@@ -391,6 +396,26 @@
       setStatus("Не удалось собрать презентацию.");
     }).then(function(){
       pptxBtn.disabled = false;
+    });
+  });
+  var pdfInput = document.getElementById("pdf");
+  if (pdfInput) pdfInput.addEventListener("change", function(){
+    var file = pdfInput.files && pdfInput.files[0];
+    pdfInput.value = "";
+    if (!file || !window.CanvasPdf) {
+      setStatus("Не удалось прочитать PDF.");
+      return;
+    }
+    setStatus("Читаю PDF…");
+    file.arrayBuffer().then(function(buf){
+      return window.CanvasPdf.read(buf);
+    }).then(function(data){
+      window.CanvasPdf.apply(data);
+      remember(collect());
+      dirty = false;
+      setStatus("PDF загружен. Текст можно править.");
+    }).catch(function(){
+      setStatus("Не удалось прочитать PDF.");
     });
   });
   loadLocal();
