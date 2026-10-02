@@ -1,10 +1,15 @@
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import PDFDocument from "pdfkit";
+import { PDFDocument, rgb } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
 
 const FONTS = path.join(path.dirname(fileURLToPath(import.meta.url)), "fonts");
-const PURPLE = "#8214FF";
-const INK = "#1a1a1a";
+const PAGE_W = 595.28;
+const PAGE_H = 841.89;
+const MARGIN = 54;
+const PURPLE = rgb(130 / 255, 20 / 255, 1);
+const INK = rgb(26 / 255, 26 / 255, 26 / 255);
 const CHECKS = [
   ["c:it", "ИТ"],
   ["c:b2b", "B2B"],
@@ -85,76 +90,108 @@ function teamLines(data) {
   return rows;
 }
 
-function contentWidth(doc) {
-  return doc.page.width - doc.page.margins.left - doc.page.margins.right;
-}
-
-function heading(doc, text, size) {
-  const width = contentWidth(doc);
-  if (doc.y > doc.page.height - doc.page.margins.bottom - 36) doc.addPage();
-  doc.moveDown(0.55);
-  doc.font("Bold").fontSize(size).fillColor(PURPLE).text(text, { width: width });
-}
-
-function writeLines(doc, lines) {
-  const width = contentWidth(doc);
-  lines.forEach(function(parts) {
-    parts.forEach(function(part, index) {
-      doc.font(part.bold ? "Bold" : "Regular").fontSize(11).fillColor(INK);
-      doc.text(part.text, {
-        width: width,
-        continued: index < parts.length - 1,
-        lineGap: 1
-      });
+function tokensOf(parts) {
+  const tokens = [];
+  parts.forEach(function(part) {
+    part.text.split(/(\s+)/).filter(Boolean).forEach(function(text) {
+      tokens.push({ text: text, bold: part.bold });
     });
   });
+  return tokens;
 }
 
-export function buildPdf(data) {
-  const doc = new PDFDocument({
-    size: "A4",
-    margins: { top: 54, bottom: 54, left: 54, right: 54 },
-    info: { Title: plainText(data.title) || "Хакатон Canvas" }
+export async function buildPdf(data) {
+  const pdf = await PDFDocument.create();
+  pdf.registerFontkit(fontkit);
+  const regular = await pdf.embedFont(await readFile(path.join(FONTS, "Montserrat-Regular.ttf")), {
+    subset: false,
+    customName: "Montserrat-Regular"
   });
-  doc.registerFont("Regular", path.join(FONTS, "PTSans-Regular.ttf"));
-  doc.registerFont("Bold", path.join(FONTS, "PTSans-Bold.ttf"));
-  const width = contentWidth(doc);
-  const chunks = [];
-  const done = new Promise(function(resolve, reject) {
-    doc.on("data", function(chunk) { chunks.push(chunk); });
-    doc.on("end", function() { resolve(Buffer.concat(chunks)); });
-    doc.on("error", reject);
+  const bold = await pdf.embedFont(await readFile(path.join(FONTS, "Montserrat-Bold.ttf")), {
+    subset: false,
+    customName: "Montserrat-Bold"
   });
+  pdf.setTitle(plainText(data.title) || "Хакатон Canvas");
+  const maxW = PAGE_W - MARGIN * 2;
+  let page = pdf.addPage([PAGE_W, PAGE_H]);
+  let y = PAGE_H - MARGIN;
 
-  doc.font("Bold").fontSize(16).fillColor(INK).text(plainText(data.title) || "Хакатон Canvas", { width: width });
-  heading(doc, "Формула", 13);
-  writeLines(doc, richLines(data.formula));
-  heading(doc, "1. Сегменты потребителей", 13);
-  heading(doc, "1.1 Конечные пользователи", 11);
-  writeLines(doc, richLines(data.users));
-  heading(doc, "1.2 К какому сегменту бизнеса внутри Ростелеком относится ваша идея:", 11);
-  writeLines(doc, [[{ text: checksLine(data), bold: false }]]);
-  heading(doc, "2. Проблема", 13);
-  writeLines(doc, richLines(data.problem));
-  heading(doc, "3. Решение", 13);
-  heading(doc, "3.1 Краткое описание", 11);
-  writeLines(doc, richLines(data.solution));
-  heading(doc, "3.2 Предполагаемые конкурентные преимущества", 11);
-  writeLines(doc, richLines(data.advantage));
-  heading(doc, "4. Объем рынка", 13);
-  writeLines(doc, richLines(data.market));
-  heading(doc, "5. Как продукт будет зарабатывать?", 13);
-  heading(doc, "5.1 Модель монетизации", 11);
-  writeLines(doc, richLines(data.money));
-  heading(doc, "5.2 Средний чек", 11);
-  writeLines(doc, richLines(data.check));
-  heading(doc, "6. Команда", 13);
-  writeLines(doc, teamLines(data).map(function(row) {
-    return [{ text: row, bold: false }];
-  }));
+  function fontOf(isBold) {
+    return isBold ? bold : regular;
+  }
 
-  doc.end();
-  return done;
+  function nextPage() {
+    page = pdf.addPage([PAGE_W, PAGE_H]);
+    y = PAGE_H - MARGIN;
+  }
+
+  function drawLine(parts, size, color) {
+    const tokens = tokensOf(parts);
+    const lines = [];
+    let line = [];
+    let width = 0;
+    tokens.forEach(function(token) {
+      const piece = fontOf(token.bold).widthOfTextAtSize(token.text, size);
+      const space = /^\s+$/.test(token.text);
+      if (line.length && width + piece > maxW && !space) {
+        lines.push(line);
+        line = [];
+        width = 0;
+      }
+      if (space && !line.length) return;
+      line.push(token);
+      width += piece;
+    });
+    if (line.length) lines.push(line);
+    const step = size * 1.4;
+    lines.forEach(function(row) {
+      if (y - step < MARGIN) nextPage();
+      let x = MARGIN;
+      row.forEach(function(token) {
+        if (x === MARGIN && /^\s+$/.test(token.text)) return;
+        const font = fontOf(token.bold);
+        page.drawText(token.text, { x: x, y: y - size, size: size, font: font, color: color });
+        x += font.widthOfTextAtSize(token.text, size);
+      });
+      y -= step;
+    });
+  }
+
+  function heading(text, size) {
+    y -= size * 0.7;
+    drawLine([{ text: text, bold: true }], size, PURPLE);
+  }
+
+  function body(lines) {
+    lines.forEach(function(parts) { drawLine(parts, 11, INK); });
+  }
+
+  drawLine([{ text: plainText(data.title) || "Хакатон Canvas", bold: true }], 16, INK);
+  heading("Формула", 13);
+  body(richLines(data.formula));
+  heading("1. Сегменты потребителей", 13);
+  heading("1.1 Конечные пользователи", 11);
+  body(richLines(data.users));
+  heading("1.2 К какому сегменту бизнеса внутри Ростелеком относится ваша идея:", 11);
+  body([[{ text: checksLine(data), bold: false }]]);
+  heading("2. Проблема", 13);
+  body(richLines(data.problem));
+  heading("3. Решение", 13);
+  heading("3.1 Краткое описание", 11);
+  body(richLines(data.solution));
+  heading("3.2 Предполагаемые конкурентные преимущества", 11);
+  body(richLines(data.advantage));
+  heading("4. Объем рынка", 13);
+  body(richLines(data.market));
+  heading("5. Как продукт будет зарабатывать?", 13);
+  heading("5.1 Модель монетизации", 11);
+  body(richLines(data.money));
+  heading("5.2 Средний чек", 11);
+  body(richLines(data.check));
+  heading("6. Команда", 13);
+  body(teamLines(data).map(function(row) { return [{ text: row, bold: false }]; }));
+
+  return Buffer.from(await pdf.save());
 }
 
 export default async function handler(req, res) {
