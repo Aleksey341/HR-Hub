@@ -2,6 +2,9 @@
   "functions": {
     "api/pptx.js": {
       "includeFiles": "api/canvas-template.pptx"
+    },
+    "api/pdf.js": {
+      "includeFiles": "api/fonts/**"
     }
   }
 }

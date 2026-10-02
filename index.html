@@ -17,9 +17,9 @@
       <p class="save" id="save">Загрузка…</p>
       <div class="who">
         <button type="button" id="pptx">Скачать PPTX</button>
-        <label class="upload">Загрузить PDF<input id="pdf" type="file" accept="application/pdf,.pdf"></label>
+        <button type="button" id="pdf">Скачать PDF</button>
       </div>
-      <p class="proof">Ошибки в словах, грамматике и синтаксисе правятся сами после короткой паузы. Загруженный PDF можно править в полях.</p>
+      <p class="proof">Ошибки в словах, грамматике и синтаксисе правятся сами после короткой паузы.</p>
       <h3>Формула</h3>
       <div class="edit formula" contenteditable="true" data-k="formula"></div>
     </div>
@@ -115,8 +115,6 @@
     <img src="img/rostelecom.png" alt="Ростелеком. Технологии возможностей">
   </section>
 </div>
-<script src="js/pdf.min.js"></script>
-<script src="canvas-pdf.js"></script>
 <script>
 (function(){
   var KEY = "hr_hackathon_canvas_v1";
@@ -381,24 +379,33 @@
       pptxBtn.disabled = false;
     });
   });
-  var pdfInput = document.getElementById("pdf");
-  if (pdfInput) pdfInput.addEventListener("change", function(){
-    var file = pdfInput.files && pdfInput.files[0];
-    pdfInput.value = "";
-    if (!file || !window.CanvasPdf) {
-      setStatus("Не удалось прочитать PDF.");
-      return;
-    }
-    setStatus("Читаю PDF…");
-    file.arrayBuffer().then(function(buf){
-      return window.CanvasPdf.read(buf);
-    }).then(function(data){
-      window.CanvasPdf.apply(data);
-      remember(collect());
-      dirty = false;
-      setStatus("PDF загружен. Текст можно править.");
+  var pdfBtn = document.getElementById("pdf");
+  if (pdfBtn) pdfBtn.addEventListener("click", function(){
+    pdfBtn.disabled = true;
+    setStatus("Готовлю PDF…");
+    fetch("/api/pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(collect())
+    }).then(function(res){
+      if (!res.ok) throw new Error("pdf");
+      return res.blob();
+    }).then(function(blob){
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement("a");
+      link.href = url;
+      link.download = "HR Agent Studio — Canvas.pdf";
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(function(){
+        link.remove();
+        URL.revokeObjectURL(url);
+      }, 1500);
+      setStatus("PDF скачан.");
     }).catch(function(){
-      setStatus("Не удалось прочитать PDF.");
+      setStatus("Не удалось собрать PDF.");
+    }).then(function(){
+      pdfBtn.disabled = false;
     });
   });
   loadLocal();
